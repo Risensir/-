@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<mainWindow width = '500' height = '600'>
+<column1>
+<send_const name = 'Вкл. циклораммы'  var = '01' header = '3F' bytescol = 'y' control_sum = 'y'/>
+<send_const name = 'Вкл. 1 ветки БПК'  var = '02' header = '3F' bytescol = 'y' control_sum = 'y'/>
+<send_const name = 'Вкл. 2 ветки БПК'  var = '03' header = '3F' bytescol = 'y' control_sum = 'y'/>
+<send_const name = 'Вкл. клапана ЭК3 БПК'  var = '04' header = '3F' bytescol = 'y' control_sum = 'y'/>
+<send_const name = 'Вкл. клапана ЭК6 БПК'  var = '05' header = '3F' bytescol = 'y' control_sum = 'y'/>
+<send_const name = 'Откл. БПК'  var = '06' header = '3F' bytescol = 'y' control_sum = 'y'/>
+
+<send_const name = 'Откл. клапана ЭК3 БПК'  var = '07' header = '3F' bytescol = 'y' control_sum = 'y'/>
+<send_const name = 'Откл. клапана ЭК6 БПК'  var = '08' header = '3F' bytescol = 'y' control_sum = 'y'/>
+<send_const name = 'Вкл. клапанов ЭК1-ЭК3 МГР1'  var = '09' header = '3F' bytescol = 'y' control_sum = 'y'/>
+<send_const name = 'Вкл. клапанов ЭК1-ЭК3 МГР2'  var = '0A' header = '3F' bytescol = 'y' control_sum = 'y'/>
+<send_const name = 'Откл. клапанов ЭК1-Э3 МГР1,2'  var = '0B' header = '3F' bytescol = 'y' control_sum = 'y'/>
+<send_const name = 'Подготовка СПД1'  var = '0C' header = '3F' bytescol = 'y' control_sum = 'y'/>
+
+</column1>
+
+<column2>
+<send_const name = 'Подготовка СПД2'  var = '0D' header = '3F' bytescol = 'y' control_sum = 'y'/>
+<send_const name = 'Подач. напр. пит. на анод СПД1'  var = '0E' header = '3F' bytescol = 'y' control_sum = 'y'/>
+<send_const name = 'Подач. напр. пит. на анод СПД2'  var = '0F' header = '3F' bytescol = 'y' control_sum = 'y'/>
+<send_const name = 'Вкл. поджигн. электр. катода СПД1'  var = '10' header = '3F' bytescol = 'y' control_sum = 'y'/>
+<send_const name = 'Вкл. поджигн. электр. катода СПД2'  var = '11' header = '3F' bytescol = 'y' control_sum = 'y'/>
+<send_const name = 'Откл. подготовки СПД1'  var = '12' header = '3F' bytescol = 'y' control_sum = 'y'/>
+
+<send_const name = 'Откл. подготовки СПД2'  var = '13' header = '3F' bytescol = 'y' control_sum = 'y'/>
+<send_const name = 'Откл. СПД1,СПД2'  var = '14' header = '3F' bytescol = 'y' control_sum = 'y'/>
+<send_const name = 'Подмагн. магн. катушек СПД1'  var = '15' header = '3F' bytescol = 'y' control_sum = 'y'/>
+<send_const name = 'Подмагн. магн. катушек СПД2'  var = '16' header = '3F' bytescol = 'y' control_sum = 'y'/>
+<send_const name = 'Откл. магн. катушек СПД1'  var = '17' header = '3F' bytescol = 'y' control_sum = 'y'/>
+<send_const name = 'Откл. магн. катушек СПД1'  var = '18' header = '3F' bytescol = 'y' control_sum = 'y'/>
+</column2>
+
+<column3>
+<send_var name = 'Подача тока' var_a = '0' var_b = '4' header = '3F' bytescol = 'y' control_sum = 'y'/>
+</column3>
+</mainWindow>
+

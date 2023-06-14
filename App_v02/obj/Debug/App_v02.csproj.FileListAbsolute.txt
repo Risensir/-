@@ -1,0 +1,112 @@
+C:\Users\Ruslan2\source\repos\App_v02\App_v02\obj\Debug\App_v02.csproj.AssemblyReference.cache
+C:\Users\Ruslan2\source\repos\App_v02\App_v02\obj\Debug\App_v02.csproj.SuggestedBindingRedirects.cache
+C:\Users\Ruslan2\source\repos\App_v02\App_v02\obj\Debug\App_v02.Properties.Resources.resources
+C:\Users\Ruslan2\source\repos\App_v02\App_v02\obj\Debug\App_v02.csproj.GenerateResource.cache
+C:\Users\Ruslan2\source\repos\App_v02\App_v02\obj\Debug\App_v02.csproj.CoreCompileInputs.cache
+C:\Users\Ruslan2\source\repos\App_v02\App_v02\obj\Debug\TEST_APP.Form1.resources
+C:\Users\Ruslan2\source\repos\App_v02\App_v02\bin\Debug\App_v02.exe.config
+C:\Users\Ruslan2\source\repos\App_v02\App_v02\bin\Debug\App_v02.exe
+C:\Users\Ruslan2\source\repos\App_v02\App_v02\bin\Debug\App_v02.pdb
+C:\Users\Ruslan2\source\repos\App_v02\App_v02\obj\Debug\App_v02.exe
+C:\Users\Ruslan2\source\repos\App_v02\App_v02\obj\Debug\App_v02.pdb
+C:\Users\Ruslan2\source\repos\App_v02\App_v02\obj\Debug\App_v02.Form2.resources
+F:\С домашнего компа\App_v02\App_v02\bin\Debug\App_v02.exe.config
+F:\С домашнего компа\App_v02\App_v02\bin\Debug\App_v02.exe
+F:\С домашнего компа\App_v02\App_v02\bin\Debug\App_v02.pdb
+F:\С домашнего компа\App_v02\App_v02\obj\Debug\App_v02.csproj.AssemblyReference.cache
+F:\С домашнего компа\App_v02\App_v02\obj\Debug\App_v02.csproj.SuggestedBindingRedirects.cache
+F:\С домашнего компа\App_v02\App_v02\obj\Debug\App_v02.Form2.resources
+F:\С домашнего компа\App_v02\App_v02\obj\Debug\TEST_APP.Form1.resources
+F:\С домашнего компа\App_v02\App_v02\obj\Debug\App_v02.Properties.Resources.resources
+F:\С домашнего компа\App_v02\App_v02\obj\Debug\App_v02.csproj.GenerateResource.cache
+F:\С домашнего компа\App_v02\App_v02\obj\Debug\App_v02.csproj.CoreCompileInputs.cache
+F:\С домашнего компа\App_v02\App_v02\obj\Debug\App_v02.exe
+F:\С домашнего компа\App_v02\App_v02\obj\Debug\App_v02.pdb
+C:\Users\NewArm\Desktop\project\App_v04\App_v02\bin\Debug\App_v02.exe.config
+C:\Users\NewArm\Desktop\project\App_v04\App_v02\bin\Debug\App_v02.exe
+C:\Users\NewArm\Desktop\project\App_v04\App_v02\bin\Debug\App_v02.pdb
+C:\Users\NewArm\Desktop\project\App_v04\App_v02\obj\Debug\App_v02.csproj.AssemblyReference.cache
+C:\Users\NewArm\Desktop\project\App_v04\App_v02\obj\Debug\App_v02.csproj.SuggestedBindingRedirects.cache
+C:\Users\NewArm\Desktop\project\App_v04\App_v02\obj\Debug\App_v02.Form2.resources
+C:\Users\NewArm\Desktop\project\App_v04\App_v02\obj\Debug\TEST_APP.Form1.resources
+C:\Users\NewArm\Desktop\project\App_v04\App_v02\obj\Debug\App_v02.Properties.Resources.resources
+C:\Users\NewArm\Desktop\project\App_v04\App_v02\obj\Debug\App_v02.csproj.GenerateResource.cache
+C:\Users\NewArm\Desktop\project\App_v04\App_v02\obj\Debug\App_v02.csproj.CoreCompileInputs.cache
+C:\Users\NewArm\Desktop\project\App_v04\App_v02\obj\Debug\App_v02.exe
+C:\Users\NewArm\Desktop\project\App_v04\App_v02\obj\Debug\App_v02.pdb
+C:\Users\Ruslan2\Desktop\WORK\БУДУ_прошивка_07.04.2023\App_v04\App_v02\bin\Debug\App_v02.exe.config
+C:\Users\Ruslan2\Desktop\WORK\БУДУ_прошивка_07.04.2023\App_v04\App_v02\bin\Debug\App_v02.exe
+C:\Users\Ruslan2\Desktop\WORK\БУДУ_прошивка_07.04.2023\App_v04\App_v02\bin\Debug\App_v02.pdb
+C:\Users\Ruslan2\Desktop\WORK\БУДУ_прошивка_07.04.2023\App_v04\App_v02\obj\Debug\App_v02.csproj.AssemblyReference.cache
+C:\Users\Ruslan2\Desktop\WORK\БУДУ_прошивка_07.04.2023\App_v04\App_v02\obj\Debug\App_v02.csproj.SuggestedBindingRedirects.cache
+C:\Users\Ruslan2\Desktop\WORK\БУДУ_прошивка_07.04.2023\App_v04\App_v02\obj\Debug\App_v02.Form2.resources
+C:\Users\Ruslan2\Desktop\WORK\БУДУ_прошивка_07.04.2023\App_v04\App_v02\obj\Debug\TEST_APP.Form1.resources
+C:\Users\Ruslan2\Desktop\WORK\БУДУ_прошивка_07.04.2023\App_v04\App_v02\obj\Debug\App_v02.Properties.Resources.resources
+C:\Users\Ruslan2\Desktop\WORK\БУДУ_прошивка_07.04.2023\App_v04\App_v02\obj\Debug\App_v02.csproj.GenerateResource.cache
+C:\Users\Ruslan2\Desktop\WORK\БУДУ_прошивка_07.04.2023\App_v04\App_v02\obj\Debug\App_v02.csproj.CoreCompileInputs.cache
+C:\Users\Ruslan2\Desktop\WORK\БУДУ_прошивка_07.04.2023\App_v04\App_v02\obj\Debug\App_v02.exe
+C:\Users\Ruslan2\Desktop\WORK\БУДУ_прошивка_07.04.2023\App_v04\App_v02\obj\Debug\App_v02.pdb
+C:\Users\Ruslan2\Desktop\WORK\БУДУ_прошивка_07.04.2023\App_v04\App_v02\bin\Debug\Microsoft.Threading.Tasks.dll
+C:\Users\Ruslan2\Desktop\WORK\БУДУ_прошивка_07.04.2023\App_v04\App_v02\bin\Debug\Microsoft.Threading.Tasks.Extensions.Desktop.dll
+C:\Users\Ruslan2\Desktop\WORK\БУДУ_прошивка_07.04.2023\App_v04\App_v02\bin\Debug\Microsoft.Threading.Tasks.Extensions.dll
+C:\Users\Ruslan2\Desktop\WORK\БУДУ_прошивка_07.04.2023\App_v04\App_v02\bin\Debug\Microsoft.Threading.Tasks.xml
+C:\Users\Ruslan2\Desktop\WORK\БУДУ_прошивка_07.04.2023\App_v04\App_v02\bin\Debug\Microsoft.Threading.Tasks.Extensions.xml
+C:\Users\Ruslan2\Desktop\WORK\БУДУ_прошивка_07.04.2023\App_v04\App_v02\bin\Debug\Microsoft.Threading.Tasks.Extensions.Desktop.xml
+C:\Users\Ruslan2\Desktop\WORK\БУДУ_прошивка_07.04.2023\App_v04\App_v02\obj\Debug\App_v02.csproj.CopyComplete
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_07.04.2023\App_v04_2\App_v02\obj\Debug\App_v02.exe
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_07.04.2023\App_v04_2\App_v02\obj\Debug\App_v02.pdb
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_07.04.2023\App_v04_2\App_v02\bin\Debug\App_v02.exe.config
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_07.04.2023\App_v04_2\App_v02\bin\Debug\App_v02.exe
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_07.04.2023\App_v04_2\App_v02\bin\Debug\Microsoft.Threading.Tasks.dll
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_07.04.2023\App_v04_2\App_v02\bin\Debug\Microsoft.Threading.Tasks.Extensions.Desktop.dll
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_07.04.2023\App_v04_2\App_v02\bin\Debug\Microsoft.Threading.Tasks.Extensions.dll
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_07.04.2023\App_v04_2\App_v02\bin\Debug\Microsoft.Threading.Tasks.xml
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_07.04.2023\App_v04_2\App_v02\bin\Debug\Microsoft.Threading.Tasks.Extensions.xml
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_07.04.2023\App_v04_2\App_v02\bin\Debug\Microsoft.Threading.Tasks.Extensions.Desktop.xml
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_07.04.2023\App_v04_2\App_v02\obj\Debug\App_v02.csproj.AssemblyReference.cache
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_07.04.2023\App_v04_2\App_v02\obj\Debug\App_v02.csproj.SuggestedBindingRedirects.cache
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_07.04.2023\App_v04_2\App_v02\obj\Debug\App_v02.Form2.resources
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_07.04.2023\App_v04_2\App_v02\obj\Debug\TEST_APP.Form1.resources
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_07.04.2023\App_v04_2\App_v02\obj\Debug\App_v02.Properties.Resources.resources
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_07.04.2023\App_v04_2\App_v02\obj\Debug\App_v02.csproj.GenerateResource.cache
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_07.04.2023\App_v04_2\App_v02\obj\Debug\App_v02.csproj.CoreCompileInputs.cache
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_07.04.2023\App_v04_2\App_v02\obj\Debug\App_v02.csproj.CopyComplete
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_07.04.2023\App_v04_2\App_v02\bin\Debug\App_v02.pdb
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v04_2\App_v02\bin\Debug\App_v02.exe.config
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v04_2\App_v02\bin\Debug\App_v02.exe
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v04_2\App_v02\bin\Debug\App_v02.pdb
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v04_2\App_v02\bin\Debug\Microsoft.Threading.Tasks.dll
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v04_2\App_v02\bin\Debug\Microsoft.Threading.Tasks.Extensions.Desktop.dll
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v04_2\App_v02\bin\Debug\Microsoft.Threading.Tasks.Extensions.dll
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v04_2\App_v02\bin\Debug\Microsoft.Threading.Tasks.xml
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v04_2\App_v02\bin\Debug\Microsoft.Threading.Tasks.Extensions.xml
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v04_2\App_v02\bin\Debug\Microsoft.Threading.Tasks.Extensions.Desktop.xml
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v04_2\App_v02\obj\Debug\App_v02.csproj.AssemblyReference.cache
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v04_2\App_v02\obj\Debug\App_v02.csproj.SuggestedBindingRedirects.cache
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v04_2\App_v02\obj\Debug\App_v02.Form2.resources
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v04_2\App_v02\obj\Debug\TEST_APP.Form1.resources
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v04_2\App_v02\obj\Debug\App_v02.Properties.Resources.resources
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v04_2\App_v02\obj\Debug\App_v02.csproj.GenerateResource.cache
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v04_2\App_v02\obj\Debug\App_v02.csproj.CoreCompileInputs.cache
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v04_2\App_v02\obj\Debug\App_v02.csproj.CopyComplete
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v04_2\App_v02\obj\Debug\App_v02.exe
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v04_2\App_v02\obj\Debug\App_v02.pdb
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v05\App_v02\bin\Debug\App_v02.exe.config
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v05\App_v02\bin\Debug\App_v02.exe
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v05\App_v02\bin\Debug\App_v02.pdb
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v05\App_v02\bin\Debug\Microsoft.Threading.Tasks.dll
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v05\App_v02\bin\Debug\Microsoft.Threading.Tasks.Extensions.Desktop.dll
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v05\App_v02\bin\Debug\Microsoft.Threading.Tasks.Extensions.dll
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v05\App_v02\bin\Debug\Microsoft.Threading.Tasks.xml
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v05\App_v02\bin\Debug\Microsoft.Threading.Tasks.Extensions.xml
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v05\App_v02\bin\Debug\Microsoft.Threading.Tasks.Extensions.Desktop.xml
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v05\App_v02\obj\Debug\App_v02.csproj.AssemblyReference.cache
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v05\App_v02\obj\Debug\App_v02.csproj.SuggestedBindingRedirects.cache
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v05\App_v02\obj\Debug\App_v02.Form2.resources
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v05\App_v02\obj\Debug\TEST_APP.Form1.resources
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v05\App_v02\obj\Debug\App_v02.Properties.Resources.resources
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v05\App_v02\obj\Debug\App_v02.csproj.GenerateResource.cache
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v05\App_v02\obj\Debug\App_v02.csproj.CoreCompileInputs.cache
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v05\App_v02\obj\Debug\App_v02.csproj.CopyComplete
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v05\App_v02\obj\Debug\App_v02.exe
+C:\Users\NewArm\Desktop\project\БУДУ_прошивка_23.05.2023\App_v05\App_v02\obj\Debug\App_v02.pdb

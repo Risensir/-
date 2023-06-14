@@ -1,0 +1,12 @@
+C:\Users\Ruslan2\source\repos\App_v02\App_v02\bin\Release\App_v02.exe.config
+C:\Users\Ruslan2\source\repos\App_v02\App_v02\bin\Release\App_v02.exe
+C:\Users\Ruslan2\source\repos\App_v02\App_v02\bin\Release\App_v02.pdb
+C:\Users\Ruslan2\source\repos\App_v02\App_v02\obj\Release\App_v02.csproj.AssemblyReference.cache
+C:\Users\Ruslan2\source\repos\App_v02\App_v02\obj\Release\App_v02.csproj.SuggestedBindingRedirects.cache
+C:\Users\Ruslan2\source\repos\App_v02\App_v02\obj\Release\TEST_APP.Form1.resources
+C:\Users\Ruslan2\source\repos\App_v02\App_v02\obj\Release\App_v02.Properties.Resources.resources
+C:\Users\Ruslan2\source\repos\App_v02\App_v02\obj\Release\App_v02.csproj.GenerateResource.cache
+C:\Users\Ruslan2\source\repos\App_v02\App_v02\obj\Release\App_v02.csproj.CoreCompileInputs.cache
+C:\Users\Ruslan2\source\repos\App_v02\App_v02\obj\Release\App_v02.exe
+C:\Users\Ruslan2\source\repos\App_v02\App_v02\obj\Release\App_v02.pdb
+C:\Users\Ruslan2\source\repos\App_v02\App_v02\obj\Release\App_v02.Form2.resources
