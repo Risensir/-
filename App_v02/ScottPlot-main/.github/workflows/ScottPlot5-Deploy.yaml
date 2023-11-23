@@ -1,0 +1,95 @@
+name: ScottPlot 5 Deploy
+
+on:
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: "7.0.x"
+  TEST_PROJECT_FOLDER: "src/ScottPlot5/ScottPlot5 Tests/"
+
+jobs:
+  test:
+    name: 🧪 Test ScottPlot5
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛒 Checkout
+        uses: actions/checkout@v3
+      - name: ✨ Setup .NET ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: 🚚 Restore
+        working-directory: ${{ env.TEST_PROJECT_FOLDER }}
+        run: dotnet restore 
+      - name: 🛠️ Build
+        working-directory: ${{ env.TEST_PROJECT_FOLDER }}
+        run: dotnet build --configuration Release
+      - name: 🧪 Test
+        working-directory: ${{ env.TEST_PROJECT_FOLDER }}
+        run: dotnet test --configuration Release --verbosity minimal
+
+  windows:
+    name: 🚀 Publish ScottPlot5 Packages
+    needs: [test]
+    runs-on: windows-latest
+    steps:
+      - name: 🛒 Checkout
+        uses: actions/checkout@v3
+
+      - name: ✨ Setup .NET ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: 🛠️ Setup NuGet
+        uses: nuget/setup-nuget@v1
+        with:
+          nuget-api-key: ${{ secrets.NUGET_API_KEY }}
+
+      - name: 🚀 Deploy ScottPlot
+        working-directory: "src/ScottPlot5/ScottPlot5"
+        run: |
+          dotnet restore
+          dotnet build --configuration Release
+          dotnet pack --configuration Release
+          nuget push .\bin\Release\*.nupkg -SkipDuplicate -Source https://api.nuget.org/v3/index.json
+
+      - name: 🚀 Deploy ScottPlot.WinForms
+        working-directory: "src/ScottPlot5/ScottPlot5 Controls/ScottPlot.WinForms"
+        run: |
+          dotnet restore
+          dotnet build --configuration Release
+          dotnet pack --configuration Release
+          nuget push .\bin\Release\*.nupkg -SkipDuplicate -Source https://api.nuget.org/v3/index.json
+
+      - name: 🚀 Deploy ScottPlot.WPF
+        working-directory: "src/ScottPlot5/ScottPlot5 Controls/ScottPlot.WPF"
+        run: |
+          dotnet restore
+          dotnet build --configuration Release
+          dotnet pack --configuration Release
+          nuget push .\bin\Release\*.nupkg -SkipDuplicate -Source https://api.nuget.org/v3/index.json
+
+      - name: 🚀 Deploy ScottPlot.Avalonia
+        working-directory: "src/ScottPlot5/ScottPlot5 Controls/ScottPlot.Avalonia"
+        run: |
+          dotnet restore
+          dotnet build --configuration Release
+          dotnet pack --configuration Release
+          nuget push .\bin\Release\*.nupkg -SkipDuplicate -Source https://api.nuget.org/v3/index.json
+
+      - name: 🚀 Deploy ScottPlot.Eto
+        working-directory: "src/ScottPlot5/ScottPlot5 Controls/ScottPlot.Eto"
+        run: |
+          dotnet restore
+          dotnet build --configuration Release
+          dotnet pack --configuration Release
+          nuget push .\bin\Release\*.nupkg -SkipDuplicate -Source https://api.nuget.org/v3/index.json
+
+      - name: 🚀 Deploy ScottPlot.WinUI
+        working-directory: "src/ScottPlot5/ScottPlot5 Controls/ScottPlot.WinUI"
+        run: |
+          dotnet restore
+          dotnet build --configuration Release
+          dotnet pack --configuration Release
+          nuget push .\bin\Release\*.nupkg -SkipDuplicate -Source https://api.nuget.org/v3/index.json

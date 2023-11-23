@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<mainWindow width = '500' height = '600'>
+
+<column1>
+<send_const name = 'START_AUTO'  var = '00' count_add = '5' 
+
+											type_var_1 = 'bool'
+											name_var_1 = 'Выбор СПД'
+											name_var_1_0 = 'СПД1'
+											name_var_1_1 = 'СПД2'
+											
+											type_var_2 = 'bool'
+											name_var_2 = 'Уставка Накала'
+											name_var_2_0 = 'Уст.1'
+											name_var_2_1 = 'Уст.2'
+											
+											type_var_3 = 'bool'
+											name_var_3 = 'Выбор БПК'
+											name_var_3_0 = 'БПК осн.'
+											name_var_3_1 = 'БПК рез.'
+											
+											type_var_4 = 'uint8'
+											name_var_4 = 'Рег. тока Магн.'
+											min_var_4 = '00'
+											max_var_4 = '78'
+											basic_var_4 = '50'
+											
+											type_var_5 = 'int'
+											name_var_5 = 'Длит. функц.'
+											min_var_5 = '032'
+											max_var_5 = '0107AC0'
+											basic_var_5 = '01000'
+											/>
+
+<send_const name = 'HET_SW' var = '01' 	count_add = '1'
+										
+										type_var_1 = 'bool'
+										name_var_1 = 'Выбор СПД'
+										name_var_1_0 = 'СПД1'
+										name_var_1_1 = 'СПД2'/>
+
+<send_const name = 'HET_HEATER_ON' var = '02' 	count_add = '1'
+										
+												type_var_1 = 'bool'
+												name_var_1 = 'Уставка Накала'
+												name_var_1_0 = 'Уст.1'
+												name_var_1_1 = 'Уст.2'/>
+												
+<send_const name = 'HET_HEATER_OFF' var = '03'/>
+<send_const name = 'XFCU_ON' var = '04'/>	
+<send_const name = 'HET_IGN_ON' var = '05'/>
+<send_const name = 'HET_ANODE_ON' var = '06'/>	
+</column1>
+<column2>
+<send_const name = 'HET_MAGN_ON' var = '07'		count_add = '1'
+										
+												type_var_1 = 'uint8'
+												name_var_1 = 'Рег. тока Магн.'
+												min_var_1 = '00'
+												max_var_1 = '78'
+												basic_var_1 = '50'/>
+												
+<send_const name = 'HET_MAGN_OFF' var = '08'/>	
+	
+<send_const name = 'HET_RM_ON' var = '09'		count_add = '1'
+										
+												type_var_1 = 'int'
+												name_var_1 = 'Длит. функц.'
+												min_var_1 = '032'
+												max_var_1 = '0107AC0'
+												basic_var_1 = '01000'/>	
+
+<send_const name = 'HET_RM_ON' var = '0A'/>
+
+<send_const name = 'HET_PRUL_SW' var = '0B'		count_add = '1'
+										
+												type_var_1 = 'bool'
+												name_var_1 = 'Выбор БПК'
+												name_var_1_0 = 'БПК осн.'
+												name_var_1_1 = 'БПК рез.'/>	
+
+<send_const name = 'PRUV_OFF' var = '0D'/>
+<send_const name = 'PV_ON_1' var = '0E'/>
+<send_const name = 'PV_ON_2' var = '0F'/>
+
+<send_const name = 'TELEMETRY' var = '10'/>												
+</column2>
+
+<column5>
+<send_var name = 'Подача тока' var_a = '0' var_b = '4' header = '3F' bytescol = 'y' control_sum = 'y'/>
+</column5>
+
+</mainWindow>
+

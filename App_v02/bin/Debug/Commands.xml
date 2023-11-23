@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <mainWindow width = '500' height = '600'>
 <column1>
+<send_const name = 'ВКЛ.ЦИКЛ'  var = '00' header = '3F' bytescol = 'y' control_sum = 'y'/>
+<send_const name = 'СТОП.ЦИКЛ'  var = '2C' header = '3F' bytescol = 'y' control_sum = 'y'/>
 <send_const name = 'Анод 27_D1'  var = '01' header = '3F' bytescol = 'y' control_sum = 'y'/>
 <send_const name = 'Анод 27_D2'  var = '02' header = '3F' bytescol = 'y' control_sum = 'y'/>
 <send_const name = 'Магнитная 27_D1'  var = '03' header = '3F' bytescol = 'y' control_sum = 'y'/>

@@ -111,6 +111,12 @@
             this.X2 = new System.Windows.Forms.CheckBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.PLAY_GRAPH = new System.Windows.Forms.Button();
+            this.start_tlm_but = new System.Windows.Forms.Button();
+            this.stop_tlm_but = new System.Windows.Forms.Button();
+            this.Interval_timer = new System.Windows.Forms.NumericUpDown();
+            this.label21 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -132,6 +138,7 @@
             this.tableLayoutPanel1.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Interval_timer)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -171,6 +178,7 @@
             this.panel1.AutoScroll = true;
             this.panel1.AutoSize = true;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel1.Controls.Add(this.PLAY_GRAPH);
             this.panel1.Controls.Add(this.tabControl1);
             this.panel1.Controls.Add(this.button4);
             this.panel1.Controls.Add(this.textBox2);
@@ -198,6 +206,10 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label21);
+            this.tabPage1.Controls.Add(this.Interval_timer);
+            this.tabPage1.Controls.Add(this.stop_tlm_but);
+            this.tabPage1.Controls.Add(this.start_tlm_but);
             this.tabPage1.Controls.Add(this.label1);
             this.tabPage1.Controls.Add(this.textBox1);
             this.tabPage1.Controls.Add(this.comboBox1);
@@ -375,7 +387,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(385, 567);
+            this.tabPage2.Size = new System.Drawing.Size(449, 567);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "ETH";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -411,7 +423,7 @@
             this.ETH_CONSOLE.Multiline = true;
             this.ETH_CONSOLE.Name = "ETH_CONSOLE";
             this.ETH_CONSOLE.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.ETH_CONSOLE.Size = new System.Drawing.Size(360, 480);
+            this.ETH_CONSOLE.Size = new System.Drawing.Size(424, 480);
             this.ETH_CONSOLE.TabIndex = 50;
             // 
             // label7
@@ -553,11 +565,13 @@
             // label17
             // 
             this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label17.Location = new System.Drawing.Point(3, 5);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(137, 13);
             this.label17.TabIndex = 1;
             this.label17.Text = "Время работы Анода,мин";
+            this.label17.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // time_anode_active
             // 
@@ -785,7 +799,7 @@
             this.tableLayoutPanel1.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(12, 6);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(36, 28);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // tableLayoutPanel4
@@ -795,7 +809,7 @@
             this.tableLayoutPanel4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanel4.ColumnCount = 1;
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(9, 3);
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(33, 3);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 1;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -806,13 +820,14 @@
             // 
             this.tableLayoutPanel3.AutoSize = true;
             this.tableLayoutPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanel3.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tableLayoutPanel3.ColumnCount = 1;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 1;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(0, 0);
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(24, 22);
             this.tableLayoutPanel3.TabIndex = 0;
             // 
             // panel3
@@ -1097,6 +1112,62 @@
             // 
             this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
+            // PLAY_GRAPH
+            // 
+            this.PLAY_GRAPH.Location = new System.Drawing.Point(373, 30);
+            this.PLAY_GRAPH.Name = "PLAY_GRAPH";
+            this.PLAY_GRAPH.Size = new System.Drawing.Size(66, 64);
+            this.PLAY_GRAPH.TabIndex = 46;
+            this.PLAY_GRAPH.Text = "Смотреть запись";
+            this.PLAY_GRAPH.UseVisualStyleBackColor = true;
+            this.PLAY_GRAPH.Click += new System.EventHandler(this.PLAY_GRAPH_Click);
+            // 
+            // start_tlm_but
+            // 
+            this.start_tlm_but.Location = new System.Drawing.Point(347, 66);
+            this.start_tlm_but.Name = "start_tlm_but";
+            this.start_tlm_but.Size = new System.Drawing.Size(85, 37);
+            this.start_tlm_but.TabIndex = 40;
+            this.start_tlm_but.Text = "Запрос Телеметрии";
+            this.start_tlm_but.UseVisualStyleBackColor = true;
+            this.start_tlm_but.Click += new System.EventHandler(this.start_tlm_but_Click);
+            // 
+            // stop_tlm_but
+            // 
+            this.stop_tlm_but.Location = new System.Drawing.Point(347, 109);
+            this.stop_tlm_but.Name = "stop_tlm_but";
+            this.stop_tlm_but.Size = new System.Drawing.Size(85, 34);
+            this.stop_tlm_but.TabIndex = 41;
+            this.stop_tlm_but.Text = "Стоп Телеметрии";
+            this.stop_tlm_but.UseVisualStyleBackColor = true;
+            this.stop_tlm_but.Click += new System.EventHandler(this.stop_tlm_but_Click);
+            // 
+            // Interval_timer
+            // 
+            this.Interval_timer.Location = new System.Drawing.Point(347, 40);
+            this.Interval_timer.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.Interval_timer.Name = "Interval_timer";
+            this.Interval_timer.Size = new System.Drawing.Size(85, 20);
+            this.Interval_timer.TabIndex = 42;
+            this.Interval_timer.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(357, 8);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(63, 26);
+            this.label21.TabIndex = 47;
+            this.label21.Text = "Интервал \r\nопроса, мс";
+            // 
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -1136,6 +1207,7 @@
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Interval_timer)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1225,5 +1297,11 @@
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.Label label20;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.Button PLAY_GRAPH;
+        private System.Windows.Forms.Button stop_tlm_but;
+        private System.Windows.Forms.Button start_tlm_but;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.NumericUpDown Interval_timer;
     }
 }

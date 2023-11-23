@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mainWindow>
+	<byte 	name = 'Заголовок' var = '3F' count = 'n' crc = 'n' type = 'uint8'/>
+
+	<byte	name = 'Флаги' count  = 'n' crc = 'y' type = 'uint8'>
+			<bit name = "Широковещательная команда" index = "0" var = "0"/>
+			<bit name = "Команда" index = "1" var = '1'/>
+			<bit name = "Запрос данных" index = "2" var = '0'/>
+			<bit name = "Передача данных" index = "3" var = '0'/>
+			<bit name = "Передача квитанции" index = "4" var = '0'/>				
+	</byte>
+	
+	<byte 	name = 'Адрес получателя'  
+		var = '03' 
+		count = 'n' 
+		crc = 'y' 
+		type = 'uint8'
+		/>
+
+	<byte 	name = 'Адрес отправителя'  
+		var = '01' 
+		count = 'n' 
+		crc = 'y' 
+		type = 'uint8'
+		/>
+
+	<byte 	name = 'Размер информационной части'  
+		var = 'iterable' 
+		count = 'n' 
+		crc = 'y' 
+		type = 'uint8'
+		/>
+
+	<byte 	name = 'Информация'  
+		var = 'command' 
+		count = 'y' 
+		crc = 'y' 
+		type = 'iterable'
+		/>
+
+	<byte 	name = 'Контрольная сумма'  
+		var = 'КС' 
+		count = 'n' 
+		crc = 'n' 
+		type = "uint8"
+		/>
+
+	<byte 	name = 'Стоп'  
+		var = '3E' 
+		count = 'n' 
+		crc = 'n' 
+		type = 'uint8'
+		/>
+
+</mainWindow>
+

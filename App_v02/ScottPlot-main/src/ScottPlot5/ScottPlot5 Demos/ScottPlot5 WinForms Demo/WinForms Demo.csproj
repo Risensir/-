@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UseWindowsForms>true</UseWindowsForms>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <IsPackable>false</IsPackable>
+
+        <!-- package restored using non-identical framework -->
+        <NoWarn>NU1701</NoWarn>
+
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\ScottPlot5 Controls\ScottPlot.OpenGL\ScottPlot.OpenGL.csproj" />
+        <ProjectReference Include="..\..\ScottPlot5 Controls\ScottPlot.WinForms\ScottPlot.WinForms.csproj" />
+        <ProjectReference Include="..\..\ScottPlot5 Cookbook\ScottPlot Cookbook.csproj" />
+        <ProjectReference Include="..\..\ScottPlot5\ScottPlot.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Resources\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Update="Properties\Resources.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Resources.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Update="Properties\Resources.resx">
+            <Generator>PublicResXFileCodeGenerator</Generator>
+            <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+    </ItemGroup>
+
+</Project>

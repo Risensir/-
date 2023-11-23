@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<main>
+	<answer>
+		<byte 	name = 'Заголовок' var = '3F' count = 'n' crc = 'n' type = 'uint8'/>
+
+		<byte	name = 'Флаги' count  = 'n' crc = 'y' type = 'uint8'>
+				<bit name = "Широковещательная команда" index = "0" var = "0"/>
+				<bit name = "Команда" index = "1" var = '0'/>
+				<bit name = "Запрос данных" index = "2" var = '0'/>
+				<bit name = "Передача данных" index = "3" var = '0'/>
+				<bit name = "Передача квитанции" index = "4" var = '1'/>				
+		</byte>
+		
+		<byte 	name = 'Адрес получателя'  
+			var = '01' 
+			count = 'n' 
+			crc = 'y' 
+			type = 'uint8'
+			/>
+
+		<byte 	name = 'Адрес отправителя'  
+			var = '03' 
+			count = 'n' 
+			crc = 'y' 
+			type = 'uint8'
+			/>
+
+		<byte 	name = 'Размер информационной части'  
+			var = '01' 
+			count = 'n' 
+			crc = 'y' 
+			type = 'uint8'
+			/>
+
+		<byte 	name = 'Информация'  
+			var = 'AF' 
+			count = 'y' 
+			crc = 'y' 
+			type = 'uint8'
+			/>
+
+		<byte 	name = 'Контрольная сумма'  
+			var = 'КС' 
+			count = 'n' 
+			crc = 'n' 
+			type = "uint8"
+			/>
+
+		<byte 	name = 'Стоп'  
+			var = '3E' 
+			count = 'n' 
+			crc = 'n' 
+			type = 'uint8'
+			/>
+
+	</answer>
+
+	<telemetry>
+
+		<byte 	name = 'Заголовок' var = '3F' count = 'n' crc = 'n' type = 'uint8'/>
+
+		<byte	name = 'Флаги' count  = 'n' crc = 'y' type = 'uint8'>
+				<bit name = "Широковещательная команда" index = "0" var = "0"/>
+				<bit name = "Команда" index = "1" var = '0'/>
+				<bit name = "Запрос данных" index = "2" var = '0'/>
+				<bit name = "Передача данных" index = "3" var = '1'/>
+				<bit name = "Передача квитанции" index = "4" var = '0'/>				
+		</byte>
+		
+		<byte 	name = 'Адрес получателя'  
+			var = '01' 
+			count = 'n' 
+			crc = 'y' 
+			type = 'uint8'
+			/>
+
+		<byte 	name = 'Адрес отправителя'  
+			var = '03' 
+			count = 'n' 
+			crc = 'y' 
+			type = 'uint8'
+			/>
+
+		<byte 	name = 'Размер информационной части'  
+			var = '0E' 
+			count = 'n' 
+			crc = 'y' 
+			type = 'uint8'
+			/>
+
+		<bytes 	name = 'Информация' crc = "y" count = 'y'> 
+			<byte>
+				<bit name = 'Готовность СПУ' 	type = 'bool' 	index = '0' index_flag = '1'/>
+				<bit name = 'КУ МГР' 			type = 'bool' 	index = '1'	index_flag = '2'/>
+				<bit name = 'КУ БПК' 			type = 'bool' 	index = '2'	index_flag = '3'/>
+				<bit name = 'ЭП' 				type = 'bool' 	index = '3'	index_flag = '4'/>
+				<bit name = 'АД' 				type = 'bool' 	index = '4'	index_flag = '5'/>
+				<bit name = 'СПД' 				type = 'bool' 	index = '5'	index_flag = '6'/>
+			</byte>	
+			
+			<byte>
+				<bit name = 'К' 		type = 'bool' 	index = '0'	index_flag = '7'/>
+				<bit name = 'СТЗА' 		type = 'bool' 	index = '1'	index_flag = '8'/>
+				<bit name = 'РРД' 		type = 'bool' 	index = '2'	index_flag = '9'/>
+				<bit name = 'БПК1' 		type = 'bool' 	index = '3'	index_flag = '10'/>
+				<bit name = 'БПК2' 		type = 'bool' 	index = '4'	index_flag = '11'/>
+				<bit name = 'КУ3 БПК' 	type = 'bool' 	index = '5'	index_flag = '12'/>
+				<bit name = 'КУ6 БПК' 	type = 'bool' 	index = '6'	index_flag = '13'/>
+				<bit name = 'МК' 		type = 'bool' 	index = '7'	index_flag = '14'/>
+			</byte>	
+			
+				<data name = 'ТАД' min_val = '00' max_val = '96' type = 'uint8' index_graph = "1" mult = "10" division = "1000"/>
+				<data name = 'НАД' min_val = '0000' max_val = '015E' type = 'uint16' index_graph = "2" division = "1" mult = "1"/>
+				<data name = 'КТАД' min_val = '00' max_val = '32' type = 'uint8' index_graph = "3" division = "1000" mult = "10"/>
+				<data name = 'ТТРД' min_val = '0000' max_val = '01F4' type = 'uint16' index_graph = "4" division = "1000" mult = "10"/>
+				<data name = 'ТКМД' min_val = '0000' max_val = '012C' type = 'uint16' index_graph = "5" division = "1000" mult = "10"/>
+				<data name = 'ТНД' min_val = '00' max_val = '78' type = 'uint8' index_graph = "6" division = "1000" mult = "100"/>
+				
+				<temp name = 'ТЕМП НМ' min_plus_val = '00' max_plus_val = '96' min_minus_val = '00' max_minus_val = '96' type = 'int8' index_graph = "7" division = "1" mult = "2"/>
+				<temp name = 'ТЕМП АП' min_plus_val = '00' max_plus_val = '96' min_minus_val = '00' max_minus_val = '96' type = 'int8' index_graph = "8" division = "1" mult = "2"/>
+				<temp name = 'ТЕМП РР' min_plus_val = '00' max_plus_val = '96' min_minus_val = '00' max_minus_val = '96' type = 'int8' index_graph = "9" division = "1" mult = "2"/>
+			
+		</bytes>
+ 
+		<byte 	name = 'Контрольная сумма'  
+			var = 'КС' 
+			count = 'n' 
+			crc = 'n' 
+			type = "uint8"
+			/>
+
+		<byte 	name = 'Стоп'  
+			var = '3E' 
+			count = 'n' 
+			crc = 'n' 
+			type = 'uint8'
+			/>
+
+	</telemetry>
+</main>
