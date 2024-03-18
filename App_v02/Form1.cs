@@ -22,6 +22,7 @@ namespace TEST_APP
     using ScottPlot;
     using ScottPlot.Demo.WinForms.WinFormsDemos;
     using System.Drawing.Drawing2D;
+    using System.Threading;
 
     public partial class Form1 : Form
     {
@@ -157,7 +158,8 @@ namespace TEST_APP
 
         public Form1()
         {
-
+            Окно_электрических_параметров panel_tlm = new Окно_электрических_параметров();
+            panel_tlm.Show();
             InitializeComponent();
             TEST_APP.Form1.timer1 = new System.Windows.Forms.Timer(this.components);
             TEST_APP.Form1.timer1.Tick += new System.EventHandler(this.timer1_Tick);
@@ -2616,6 +2618,20 @@ namespace TEST_APP
             {
                 timer1.Stop();
             }
+        }
+
+        private void RK_ON_Click(object sender, EventArgs e)
+        {
+            _serialPort.Write("#011001\r");
+            Thread.Sleep(100);
+            _serialPort.Write("#011000\r");
+        }
+
+        private void RK_OFF_Click(object sender, EventArgs e)
+        {
+            _serialPort.Write("#011101\r");
+            Thread.Sleep(100);
+            _serialPort.Write("#011100\r");
         }
     }
 

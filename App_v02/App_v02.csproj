@@ -125,6 +125,12 @@
     <Compile Include="User_Graphs.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Окно электрических параметров.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Окно электрических параметров.Designer.cs">
+      <DependentUpon>Окно электрических параметров.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Class1.resx">
       <DependentUpon>Class1.cs</DependentUpon>
     </EmbeddedResource>
@@ -150,6 +156,9 @@
     </Compile>
     <EmbeddedResource Include="User_Graphs.resx">
       <DependentUpon>User_Graphs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Окно электрических параметров.resx">
+      <DependentUpon>Окно электрических параметров.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

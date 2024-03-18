@@ -32,8 +32,22 @@
             this.label1 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.PLAY_GRAPH = new System.Windows.Forms.Button();
+            this.КПА = new System.Windows.Forms.TabControl();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.button12 = new System.Windows.Forms.Button();
+            this.button10 = new System.Windows.Forms.Button();
+            this.RK_ON = new System.Windows.Forms.Button();
+            this.RK_OFF = new System.Windows.Forms.Button();
+            this.checkedListBox2 = new System.Windows.Forms.CheckedListBox();
+            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.button8 = new System.Windows.Forms.Button();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label21 = new System.Windows.Forms.Label();
+            this.Interval_timer = new System.Windows.Forms.NumericUpDown();
+            this.stop_tlm_but = new System.Windows.Forms.Button();
+            this.start_tlm_but = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -112,18 +126,15 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.PLAY_GRAPH = new System.Windows.Forms.Button();
-            this.start_tlm_but = new System.Windows.Forms.Button();
-            this.stop_tlm_but = new System.Windows.Forms.Button();
-            this.Interval_timer = new System.Windows.Forms.NumericUpDown();
-            this.label21 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.tabControl1.SuspendLayout();
+            this.КПА.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Interval_timer)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -138,7 +149,6 @@
             this.tableLayoutPanel1.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Interval_timer)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -179,7 +189,7 @@
             this.panel1.AutoSize = true;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel1.Controls.Add(this.PLAY_GRAPH);
-            this.panel1.Controls.Add(this.tabControl1);
+            this.panel1.Controls.Add(this.КПА);
             this.panel1.Controls.Add(this.button4);
             this.panel1.Controls.Add(this.textBox2);
             this.panel1.Controls.Add(this.label10);
@@ -191,18 +201,129 @@
             this.panel1.Size = new System.Drawing.Size(464, 700);
             this.panel1.TabIndex = 22;
             // 
-            // tabControl1
+            // PLAY_GRAPH
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.PLAY_GRAPH.Location = new System.Drawing.Point(373, 30);
+            this.PLAY_GRAPH.Name = "PLAY_GRAPH";
+            this.PLAY_GRAPH.Size = new System.Drawing.Size(66, 64);
+            this.PLAY_GRAPH.TabIndex = 46;
+            this.PLAY_GRAPH.Text = "Смотреть запись";
+            this.PLAY_GRAPH.UseVisualStyleBackColor = true;
+            this.PLAY_GRAPH.Click += new System.EventHandler(this.PLAY_GRAPH_Click);
+            // 
+            // КПА
+            // 
+            this.КПА.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Location = new System.Drawing.Point(3, 94);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(457, 593);
-            this.tabControl1.TabIndex = 45;
+            this.КПА.Controls.Add(this.tabPage3);
+            this.КПА.Controls.Add(this.tabPage1);
+            this.КПА.Controls.Add(this.tabPage2);
+            this.КПА.Location = new System.Drawing.Point(3, 94);
+            this.КПА.Name = "КПА";
+            this.КПА.SelectedIndex = 0;
+            this.КПА.Size = new System.Drawing.Size(457, 593);
+            this.КПА.TabIndex = 45;
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.button12);
+            this.tabPage3.Controls.Add(this.button10);
+            this.tabPage3.Controls.Add(this.RK_ON);
+            this.tabPage3.Controls.Add(this.RK_OFF);
+            this.tabPage3.Controls.Add(this.checkedListBox2);
+            this.tabPage3.Controls.Add(this.checkedListBox1);
+            this.tabPage3.Controls.Add(this.textBox4);
+            this.tabPage3.Controls.Add(this.button8);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(449, 567);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "КПА";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // button12
+            // 
+            this.button12.Location = new System.Drawing.Point(241, 154);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(202, 35);
+            this.button12.TabIndex = 5;
+            this.button12.Text = "Запуск самопроверки КПА";
+            this.button12.UseVisualStyleBackColor = true;
+            // 
+            // button10
+            // 
+            this.button10.Location = new System.Drawing.Point(6, 154);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(202, 35);
+            this.button10.TabIndex = 4;
+            this.button10.Text = "Запуск самотестирования";
+            this.button10.UseVisualStyleBackColor = true;
+            // 
+            // RK_ON
+            // 
+            this.RK_ON.Location = new System.Drawing.Point(6, 104);
+            this.RK_ON.Name = "RK_ON";
+            this.RK_ON.Size = new System.Drawing.Size(202, 46);
+            this.RK_ON.TabIndex = 3;
+            this.RK_ON.Text = "РК вкл. БУДУ";
+            this.RK_ON.UseVisualStyleBackColor = true;
+            this.RK_ON.Click += new System.EventHandler(this.RK_ON_Click);
+            // 
+            // RK_OFF
+            // 
+            this.RK_OFF.Location = new System.Drawing.Point(241, 104);
+            this.RK_OFF.Name = "RK_OFF";
+            this.RK_OFF.Size = new System.Drawing.Size(202, 46);
+            this.RK_OFF.TabIndex = 3;
+            this.RK_OFF.Text = "РК выкл. БУДУ";
+            this.RK_OFF.UseVisualStyleBackColor = true;
+            this.RK_OFF.Click += new System.EventHandler(this.RK_OFF_Click);
+            // 
+            // checkedListBox2
+            // 
+            this.checkedListBox2.FormattingEnabled = true;
+            this.checkedListBox2.Items.AddRange(new object[] {
+            "Интерфейс обмена МКО",
+            "Интрефейс обмена RS485"});
+            this.checkedListBox2.Location = new System.Drawing.Point(241, 64);
+            this.checkedListBox2.Name = "checkedListBox2";
+            this.checkedListBox2.Size = new System.Drawing.Size(202, 34);
+            this.checkedListBox2.TabIndex = 2;
+            // 
+            // checkedListBox1
+            // 
+            this.checkedListBox1.FormattingEnabled = true;
+            this.checkedListBox1.Items.AddRange(new object[] {
+            "Основной полукомплект",
+            "Резервный полукомплект"});
+            this.checkedListBox1.Location = new System.Drawing.Point(6, 64);
+            this.checkedListBox1.Name = "checkedListBox1";
+            this.checkedListBox1.Size = new System.Drawing.Size(202, 34);
+            this.checkedListBox1.TabIndex = 2;
+            // 
+            // textBox4
+            // 
+            this.textBox4.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.textBox4.Location = new System.Drawing.Point(3, 209);
+            this.textBox4.Multiline = true;
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(443, 355);
+            this.textBox4.TabIndex = 1;
+            this.textBox4.Text = "Получена квитанция об успешном принятии команды – HET_HEATER_OFF \r\nПолучена квита" +
+    "нция об успешном принятии команды – HET_MAGN_OFF";
+            // 
+            // button8
+            // 
+            this.button8.Dock = System.Windows.Forms.DockStyle.Top;
+            this.button8.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.button8.Location = new System.Drawing.Point(3, 3);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(443, 55);
+            this.button8.TabIndex = 0;
+            this.button8.Text = "Установить связь с пультом";
+            this.button8.UseVisualStyleBackColor = true;
             // 
             // tabPage1
             // 
@@ -230,6 +351,52 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "COM";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(357, 8);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(63, 26);
+            this.label21.TabIndex = 47;
+            this.label21.Text = "Интервал \r\nопроса, мс";
+            // 
+            // Interval_timer
+            // 
+            this.Interval_timer.Location = new System.Drawing.Point(347, 40);
+            this.Interval_timer.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.Interval_timer.Name = "Interval_timer";
+            this.Interval_timer.Size = new System.Drawing.Size(85, 20);
+            this.Interval_timer.TabIndex = 42;
+            this.Interval_timer.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // stop_tlm_but
+            // 
+            this.stop_tlm_but.Location = new System.Drawing.Point(347, 109);
+            this.stop_tlm_but.Name = "stop_tlm_but";
+            this.stop_tlm_but.Size = new System.Drawing.Size(85, 34);
+            this.stop_tlm_but.TabIndex = 41;
+            this.stop_tlm_but.Text = "Стоп Телеметрии";
+            this.stop_tlm_but.UseVisualStyleBackColor = true;
+            this.stop_tlm_but.Click += new System.EventHandler(this.stop_tlm_but_Click);
+            // 
+            // start_tlm_but
+            // 
+            this.start_tlm_but.Location = new System.Drawing.Point(347, 66);
+            this.start_tlm_but.Name = "start_tlm_but";
+            this.start_tlm_but.Size = new System.Drawing.Size(85, 37);
+            this.start_tlm_but.TabIndex = 40;
+            this.start_tlm_but.Text = "Запрос Телеметрии";
+            this.start_tlm_but.UseVisualStyleBackColor = true;
+            this.start_tlm_but.Click += new System.EventHandler(this.start_tlm_but_Click);
             // 
             // textBox1
             // 
@@ -1112,62 +1279,6 @@
             // 
             this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
-            // PLAY_GRAPH
-            // 
-            this.PLAY_GRAPH.Location = new System.Drawing.Point(373, 30);
-            this.PLAY_GRAPH.Name = "PLAY_GRAPH";
-            this.PLAY_GRAPH.Size = new System.Drawing.Size(66, 64);
-            this.PLAY_GRAPH.TabIndex = 46;
-            this.PLAY_GRAPH.Text = "Смотреть запись";
-            this.PLAY_GRAPH.UseVisualStyleBackColor = true;
-            this.PLAY_GRAPH.Click += new System.EventHandler(this.PLAY_GRAPH_Click);
-            // 
-            // start_tlm_but
-            // 
-            this.start_tlm_but.Location = new System.Drawing.Point(347, 66);
-            this.start_tlm_but.Name = "start_tlm_but";
-            this.start_tlm_but.Size = new System.Drawing.Size(85, 37);
-            this.start_tlm_but.TabIndex = 40;
-            this.start_tlm_but.Text = "Запрос Телеметрии";
-            this.start_tlm_but.UseVisualStyleBackColor = true;
-            this.start_tlm_but.Click += new System.EventHandler(this.start_tlm_but_Click);
-            // 
-            // stop_tlm_but
-            // 
-            this.stop_tlm_but.Location = new System.Drawing.Point(347, 109);
-            this.stop_tlm_but.Name = "stop_tlm_but";
-            this.stop_tlm_but.Size = new System.Drawing.Size(85, 34);
-            this.stop_tlm_but.TabIndex = 41;
-            this.stop_tlm_but.Text = "Стоп Телеметрии";
-            this.stop_tlm_but.UseVisualStyleBackColor = true;
-            this.stop_tlm_but.Click += new System.EventHandler(this.stop_tlm_but_Click);
-            // 
-            // Interval_timer
-            // 
-            this.Interval_timer.Location = new System.Drawing.Point(347, 40);
-            this.Interval_timer.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.Interval_timer.Name = "Interval_timer";
-            this.Interval_timer.Size = new System.Drawing.Size(85, 20);
-            this.Interval_timer.TabIndex = 42;
-            this.Interval_timer.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(357, 8);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(63, 26);
-            this.label21.TabIndex = 47;
-            this.label21.Text = "Интервал \r\nопроса, мс";
-            // 
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -1176,7 +1287,7 @@
             this.ClientSize = new System.Drawing.Size(1508, 700);
             this.Controls.Add(this.splitContainer1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "ПО КПА БУДУ";
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -1185,9 +1296,12 @@
             this.splitContainer1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.tabControl1.ResumeLayout(false);
+            this.КПА.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Interval_timer)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -1207,7 +1321,6 @@
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Interval_timer)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1239,7 +1352,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabControl КПА;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Label label7;
@@ -1303,5 +1416,14 @@
         private System.Windows.Forms.Button start_tlm_but;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.NumericUpDown Interval_timer;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.Button RK_OFF;
+        private System.Windows.Forms.CheckedListBox checkedListBox1;
+        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.CheckedListBox checkedListBox2;
+        private System.Windows.Forms.Button RK_ON;
+        private System.Windows.Forms.Button button12;
     }
 }

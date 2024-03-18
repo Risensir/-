@@ -83,7 +83,8 @@
 <send_const name = 'PV_ON_1' var = '0E'/>
 <send_const name = 'PV_ON_2' var = '0F'/>
 
-<send_const name = 'TELEMETRY' var = '10'/>												
+<send_const name = 'TELEMETRY' var = '10'/>	
+											
 </column2>
 
 <column5>

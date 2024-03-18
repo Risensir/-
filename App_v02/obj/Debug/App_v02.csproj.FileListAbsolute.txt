@@ -141,3 +141,4 @@ C:\GIT\pc_software\App_v02\obj\Debug\App_v02.DataLogger.resources
 C:\GIT\pc_software\App_v02\obj\Debug\App_v02.Form3.resources
 C:\GIT\pc_software\App_v02\obj\Debug\App_v02.user_FormsPlot.resources
 C:\GIT\pc_software\App_v02\obj\Debug\App_v02.PLAY_PLOTS.resources
+C:\GIT\pc_software\App_v02\obj\Debug\App_v02.Окно_электрических_параметров.resources
