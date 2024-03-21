@@ -23,10 +23,12 @@ namespace TEST_APP
     using ScottPlot.Demo.WinForms.WinFormsDemos;
     using System.Drawing.Drawing2D;
     using System.Threading;
+    using ScottPlot.MarkerShapes;
+    using System.IO;
 
     public partial class Form1 : Form
     {
-        DateTime time_global= DateTime.Now;
+        DateTime time_global = DateTime.Now;
         List<Button_user> but = new List<Button_user>();
         List<Slider_user> slider = new List<Slider_user>();
         Button_user but_telemetry;
@@ -85,7 +87,7 @@ namespace TEST_APP
         }
 
         List<USER_struct> STRUCT_ANSWER = new List<USER_struct>();
-        List <USER_struct> STRUCT_COMMAND = new List<USER_struct>();
+        List<USER_struct> STRUCT_COMMAND = new List<USER_struct>();
         List<USER_struct_telemetry> STRUCT_TELEMETRY = new List<USER_struct_telemetry>();
 
         static SerialPort _serialPort;
@@ -96,13 +98,13 @@ namespace TEST_APP
         string IP_ETH = "192.168.1.193";
         int PORT_ETH = 1234;
 
-        string default_PortName = "COM1";
+        string default_PortName = "COM8";
         int default_BaudRate = 115200;
         System.IO.Ports.Parity default_Parity = Parity.None;
         int default_DataBits = 8;
         System.IO.Ports.StopBits default_StopBits = StopBits.One;
         byte default_header = (byte)0x3F;
-        string filePath_XML = @"Commands.xml";
+        string filePath_XML = @"Commands_with_struct.xml";
 
         //App_v02.Form2 graph = new App_v02.Form2();
         App_v02.Form2 graph;
@@ -113,22 +115,25 @@ namespace TEST_APP
         static IPEndPoint tcpEndPoint;
         static Socket tcpSocket;
         int Slider_val = 0;
-        
+
         double temp_time = 0;
 
         long _TIME_ = 0;
         string _TIME_STRING_ = "";
-        uint _LAST_TIMER_ = 0; 
+        uint _LAST_TIMER_ = 0;
+
+        StreamWriter log_file;
         //public System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer timer_rs485 = new System.Windows.Forms.Timer();
 
         //...........................................................Создание новой структуры для процедурных кнопок
         class Button_user : System.Windows.Forms.Button
         {
             public string name;
             public byte var;
-            public byte[] vars;  
+            public byte[] vars;
             public List<CheckedListBox> checkBox = new List<CheckedListBox>();
-            public List<NumericUpDown> uint8 =  new List<NumericUpDown>();
+            public List<NumericUpDown> uint8 = new List<NumericUpDown>();
             public List<NumericUpDown> int32 = new List<NumericUpDown>();
             public List<string> str_type = new List<string>();
             public bool press_flag;
@@ -159,7 +164,7 @@ namespace TEST_APP
         public Form1()
         {
             Окно_электрических_параметров panel_tlm = new Окно_электрических_параметров();
-            panel_tlm.Show();
+            //panel_tlm.Show();
             InitializeComponent();
             TEST_APP.Form1.timer1 = new System.Windows.Forms.Timer(this.components);
             TEST_APP.Form1.timer1.Tick += new System.EventHandler(this.timer1_Tick);
@@ -181,15 +186,27 @@ namespace TEST_APP
             Initialize_combobox();
 
 
-            _serialPort.ReceivedBytesThreshold = 3;
+            _serialPort.ReceivedBytesThreshold = 4;
             _serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
+            //_serialPort.ReadBufferSize = 25;
             /// TEST_APP.Form1.timer1.Interval = 1000;
             textBox2.Text = filePath_XML;
             comboBox1.Click += new EventHandler(combobox1_click_Hanlder);
             XML_STRUCT_COMMAND_READ();
             XML_STRUCT_ANSWER_READ();
-
+            XML_COMMAND_READ();
+            //timer_rs485.Interval = 1;
+            //timer_rs485.Tick += new System.EventHandler(this.timer_rs485_tick);
+            //timer_rs485.Start();
+            int i = 0;
             
+            path_log_file = "LOGS/PROGRAM_LOGS/" + DateTime.Now.Year.ToString() + "_" +  DateTime.Now.Month.ToString() + "_" + DateTime.Now.Day.ToString();
+            while (File.Exists(path_log_file + "_" + i.ToString() + ".txt"))
+                i++;
+
+            path_log_file += "_" + i.ToString() + ".txt";
+            log_file = new StreamWriter(path_log_file);
+
         }
 
         //.........................................................................Заполнение комбобоксов данными по умолчанию
@@ -202,7 +219,7 @@ namespace TEST_APP
             comboBox5.Text = default_StopBits.ToString();
         }
 
-        private void combobox1_click_Hanlder(object sender , EventArgs e)
+        private void combobox1_click_Hanlder(object sender, EventArgs e)
         {
             string[] ports = SerialPort.GetPortNames();
 
@@ -349,7 +366,7 @@ namespace TEST_APP
 
         private void CLEAN_Cycle()
         {
-            CheckBox[] i = { X1, X2, X3, X4, X5, X6, X7, X8, X9};
+            CheckBox[] i = { X1, X2, X3, X4, X5, X6, X7, X8, X9 };
             foreach (CheckBox x in i)
             {
                 SetCycl(false, x);
@@ -358,14 +375,14 @@ namespace TEST_APP
 
         private void User_button_reset_color_Click(object sender, EventArgs e)
         {
-            
+
             foreach (Button_user x in but)
             {
                 x.ForeColor = Color.Black;
                 x.press_flag = false;
             }
-            
-            
+
+
         }
         //---------------------------------------------------------XML-интерфейс----------------------------------------------------
 
@@ -427,7 +444,7 @@ namespace TEST_APP
                 }
                 STRUCT_COMMAND.Add(user_struct);
             }
-               
+
         }
 
         private void XML_STRUCT_ANSWER_READ()
@@ -439,7 +456,7 @@ namespace TEST_APP
             xml.Load("STRUCT_ANSWER.xml");
             XmlElement element = xml.DocumentElement;
 
-            
+
             // USER_struct user_struct = new USER_struct();
             // int i = 0, j = 0, k = 0;
 
@@ -537,7 +554,7 @@ namespace TEST_APP
                                     {
                                         foreach (XmlNode nd in node.ChildNodes)
                                         {
-                                            
+
                                             if ((nd.Name == "bit") & (nd.Attributes.GetNamedItem("type") != null))
                                             {
                                                 USER_Bool_tlm_data user_bool = new USER_Bool_tlm_data();
@@ -552,109 +569,109 @@ namespace TEST_APP
                                                     user_bool.index_flag = int.Parse(nd.Attributes.GetNamedItem("index_flag").Value);
 
                                                 user_tlm.user_bool_tlm_data.Add(user_bool);
- 
+
                                             }
                                         }
-                                    }else  
+                                    } else
                                             if ((node.Name == "data") & (node.Attributes.GetNamedItem("type") != null))
-                                            {
-                                                    USER_uint_tlm_data user_uint_tlm = new USER_uint_tlm_data();
-                                                   // USER_Bool_tlm_data user_bool = new USER_Bool_tlm_data();
+                                    {
+                                        USER_uint_tlm_data user_uint_tlm = new USER_uint_tlm_data();
+                                        // USER_Bool_tlm_data user_bool = new USER_Bool_tlm_data();
 
-                                                    if (node.Attributes.GetNamedItem("name") != null)
-                                                        user_tlm.name = node.Attributes.GetNamedItem("name").Value;
-                                               
-                                                     if (node.Attributes.GetNamedItem("min_val") != null)
-                                                     {
-                                                        string temp = node.Attributes.GetNamedItem("min_val").Value;  
-                                                        user_uint_tlm.min_var = convert_str_int(temp);
-                                                     }
+                                        if (node.Attributes.GetNamedItem("name") != null)
+                                            user_tlm.name = node.Attributes.GetNamedItem("name").Value;
 
-                                                    if (node.Attributes.GetNamedItem("max_val") != null)
-                                                    {
-                                                        string temp = node.Attributes.GetNamedItem("max_val").Value;
-                                                        user_uint_tlm.max_var = convert_str_int(temp);
-                                                    }
+                                        if (node.Attributes.GetNamedItem("min_val") != null)
+                                        {
+                                            string temp = node.Attributes.GetNamedItem("min_val").Value;
+                                            user_uint_tlm.min_var = convert_str_int(temp);
+                                        }
 
-                                                    if (node.Attributes.GetNamedItem("type").Value == "uint8")
-                                                        user_tlm.size = 1;
-                                                    else
-                                                    if (node.Attributes.GetNamedItem("type").Value == "uint16")
-                                                        user_tlm.size = 2;
+                                        if (node.Attributes.GetNamedItem("max_val") != null)
+                                        {
+                                            string temp = node.Attributes.GetNamedItem("max_val").Value;
+                                            user_uint_tlm.max_var = convert_str_int(temp);
+                                        }
 
-                                                     if (node.Attributes.GetNamedItem("index_graph") != null)
-                                                        user_tlm.index_graph = int.Parse(node.Attributes.GetNamedItem("index_graph").Value);
+                                        if (node.Attributes.GetNamedItem("type").Value == "uint8")
+                                            user_tlm.size = 1;
+                                        else
+                                        if (node.Attributes.GetNamedItem("type").Value == "uint16")
+                                            user_tlm.size = 2;
 
-                                                     if (node.Attributes.GetNamedItem("division") != null)
-                                                        user_tlm.division = int.Parse(node.Attributes.GetNamedItem("division").Value);
+                                        if (node.Attributes.GetNamedItem("index_graph") != null)
+                                            user_tlm.index_graph = int.Parse(node.Attributes.GetNamedItem("index_graph").Value);
 
-                                                     if (node.Attributes.GetNamedItem("mult") != null)
-                                                        user_tlm.mult = int.Parse(node.Attributes.GetNamedItem("mult").Value);
+                                        if (node.Attributes.GetNamedItem("division") != null)
+                                            user_tlm.division = int.Parse(node.Attributes.GetNamedItem("division").Value);
+
+                                        if (node.Attributes.GetNamedItem("mult") != null)
+                                            user_tlm.mult = int.Parse(node.Attributes.GetNamedItem("mult").Value);
 
                                         user_tlm.user_uint_tlm_data.Add(user_uint_tlm);
-                                                //user_tlm.user_bool_tlm_data.Add(user_bool);
+                                        //user_tlm.user_bool_tlm_data.Add(user_bool);
 
-                                            }else
+                                    } else
 
                                                 if (node.Name == "temp")
-                                                {
-                                                    USER_temp_tlm_data user_temp_tlm = new USER_temp_tlm_data();
-                                                    // USER_Bool_tlm_data user_bool = new USER_Bool_tlm_data();
+                                    {
+                                        USER_temp_tlm_data user_temp_tlm = new USER_temp_tlm_data();
+                                        // USER_Bool_tlm_data user_bool = new USER_Bool_tlm_data();
 
-                                                        if (node.Attributes.GetNamedItem("name") != null)
-                                                            user_tlm.name = node.Attributes.GetNamedItem("name").Value;
+                                        if (node.Attributes.GetNamedItem("name") != null)
+                                            user_tlm.name = node.Attributes.GetNamedItem("name").Value;
 
-                                                        if (node.Attributes.GetNamedItem("min_plus_val") != null)
-                                                        {
-                                                            string temp = node.Attributes.GetNamedItem("min_plus_val").Value;  
-                                                             user_temp_tlm.min_plus_var = convert_str_int(temp);
-                                                        }
+                                        if (node.Attributes.GetNamedItem("min_plus_val") != null)
+                                        {
+                                            string temp = node.Attributes.GetNamedItem("min_plus_val").Value;
+                                            user_temp_tlm.min_plus_var = convert_str_int(temp);
+                                        }
 
-                                                        if (node.Attributes.GetNamedItem("max_plus_val") != null)
-                                                        {
-                                                            string temp = node.Attributes.GetNamedItem("max_plus_val").Value;  
-                                                             user_temp_tlm.max_plus_var = convert_str_int(temp);
-                                                        }
+                                        if (node.Attributes.GetNamedItem("max_plus_val") != null)
+                                        {
+                                            string temp = node.Attributes.GetNamedItem("max_plus_val").Value;
+                                            user_temp_tlm.max_plus_var = convert_str_int(temp);
+                                        }
 
-                                                        if (node.Attributes.GetNamedItem("min_minus_val") != null)
-                                                        {
-                                                            string temp = node.Attributes.GetNamedItem("min_minus_val").Value;
-                                                            user_temp_tlm.min_minus_var = convert_str_int(temp);
-                                                        }
+                                        if (node.Attributes.GetNamedItem("min_minus_val") != null)
+                                        {
+                                            string temp = node.Attributes.GetNamedItem("min_minus_val").Value;
+                                            user_temp_tlm.min_minus_var = convert_str_int(temp);
+                                        }
 
-                                                        if (node.Attributes.GetNamedItem("max_minus_val") != null)
-                                                        {
-                                                            string temp = node.Attributes.GetNamedItem("max_minus_val").Value;
-                                                            user_temp_tlm.max_minus_var = convert_str_int(temp);
-                                                        }
-                                                        user_tlm.user_temp_tlm_data.Add(user_temp_tlm);
+                                        if (node.Attributes.GetNamedItem("max_minus_val") != null)
+                                        {
+                                            string temp = node.Attributes.GetNamedItem("max_minus_val").Value;
+                                            user_temp_tlm.max_minus_var = convert_str_int(temp);
+                                        }
+                                        user_tlm.user_temp_tlm_data.Add(user_temp_tlm);
 
-                                                        if (node.Attributes.GetNamedItem("type").Value == "int8")
-                                                            user_tlm.size = 1;
-                                                        else
-                                                        if (node.Attributes.GetNamedItem("type").Value == "int16")
-                                                            user_tlm.size = 2;
+                                        if (node.Attributes.GetNamedItem("type").Value == "int8")
+                                            user_tlm.size = 1;
+                                        else
+                                        if (node.Attributes.GetNamedItem("type").Value == "int16")
+                                            user_tlm.size = 2;
 
-                                                        if (node.Attributes.GetNamedItem("index_graph") != null)
-                                                            user_tlm.index_graph = int.Parse(node.Attributes.GetNamedItem("index_graph").Value);
+                                        if (node.Attributes.GetNamedItem("index_graph") != null)
+                                            user_tlm.index_graph = int.Parse(node.Attributes.GetNamedItem("index_graph").Value);
 
-                                                        if (node.Attributes.GetNamedItem("division") != null)
-                                                        user_tlm.division = int.Parse(node.Attributes.GetNamedItem("division").Value);
+                                        if (node.Attributes.GetNamedItem("division") != null)
+                                            user_tlm.division = int.Parse(node.Attributes.GetNamedItem("division").Value);
 
-                                                        if (node.Attributes.GetNamedItem("mult") != null)
-                                                            user_tlm.mult = int.Parse(node.Attributes.GetNamedItem("mult").Value);
+                                        if (node.Attributes.GetNamedItem("mult") != null)
+                                            user_tlm.mult = int.Parse(node.Attributes.GetNamedItem("mult").Value);
                                     }
                                     user_struct.user_tlm_data.Add(user_tlm);
                                     //if (node.Attributes.GetNamedItem("var").Value == "1")
                                     //    temp_var |= (byte)(1 << int.Parse(node.Attributes.GetNamedItem("index").Value));
                                 }
-                                } 
+                            }
                             STRUCT_TELEMETRY.Add(user_struct);
                         }
                         break;
                 }
 
-            }   
+            }
 
         }
 
@@ -692,7 +709,7 @@ namespace TEST_APP
             //........................................................................ Создание новых стилей колонок и таблицы
             //tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize, 50));
             //tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.AutoSize, 50));
-            
+
             //tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize, 50));
             //tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.AutoSize, 50));
 
@@ -704,13 +721,13 @@ namespace TEST_APP
             foreach (XmlNode xnode in element)
             {
                 //...............................................................Добавление новой колонки
-                
-                    //tableLayoutPanel3.ColumnCount += 1;
+
+                //tableLayoutPanel3.ColumnCount += 1;
                 //..............................................................Считывание дочерних элементов
                 foreach (XmlNode childnode in xnode.ChildNodes)
                 {
-                    
-                        //tableLayoutPanel3.RowCount += 1;
+
+                    //tableLayoutPanel3.RowCount += 1;
                     //--------------------------------------------------------------------------- VAR
                     switch (childnode.Name)
                     {
@@ -725,11 +742,11 @@ namespace TEST_APP
                                 string temp_string_var = childnode.Attributes.GetNamedItem("var").Value;
                                 if (!((temp_string_var == "") | (temp_string_var == null)))
                                     but[but.Count - 1].var = Convert.ToByte(temp_string_var, 16);
-                                
+
                                 int count_add = -1;
 
 
-                               
+
 
                                 TableLayoutPanel table_second = new TableLayoutPanel();
                                 table_second.Dock = DockStyle.Fill;
@@ -753,8 +770,8 @@ namespace TEST_APP
                                     table_third.AutoSize = true;
                                     table_third.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
 
-                                    
-                                    
+
+
                                     for (int index = 0; index <= count_add; index++)
                                     {
                                         Label label = new Label();
@@ -766,7 +783,7 @@ namespace TEST_APP
 
 
                                             table_third.Controls.Add(label);
-                                            
+
                                             if (childnode.Attributes.GetNamedItem("type_var_" + index.ToString()) != null)
                                             {
                                                 string type_temp = childnode.Attributes.GetNamedItem("type_var_" + index.ToString()).Value;
@@ -791,7 +808,7 @@ namespace TEST_APP
                                                         checkBox.SetBounds(0, 0, 10, 40);
                                                         checkBox.ItemCheck += new ItemCheckEventHandler(this.CheckBox_Handler);
                                                         table_third.Controls.Add(checkBox);
-                                                        
+
                                                         but[but.Count - 1].checkBox.Add(checkBox);
                                                         but[but.Count - 1].str_type.Add("bool");
                                                         break;
@@ -803,7 +820,7 @@ namespace TEST_APP
 
                                                         if ((childnode.Attributes.GetNamedItem(temp_min_str) != null) & (childnode.Attributes.GetNamedItem(temp_max_str) != null) & (childnode.Attributes.GetNamedItem(temp_basic_str) != null))
                                                         {
-                                                            int min = convert_str_int( childnode.Attributes.GetNamedItem(temp_min_str).Value);
+                                                            int min = convert_str_int(childnode.Attributes.GetNamedItem(temp_min_str).Value);
                                                             int max = convert_str_int(childnode.Attributes.GetNamedItem(temp_max_str).Value);
                                                             int basic = convert_str_int(childnode.Attributes.GetNamedItem(temp_basic_str).Value);
 
@@ -880,7 +897,7 @@ namespace TEST_APP
                                     table_second.Controls.Add(table_third, 1, 0);
                                 }
                                 but[but.Count - 1].press_flag = false;
-                               // but[but.Count - 1].Dock = DockStyle.Fill;
+                                // but[but.Count - 1].Dock = DockStyle.Fill;
                                 but[but.Count - 1].AutoSize  = false;
                                 but[but.Count - 1].Width  = 150;
                                 but[but.Count - 1].Height  = 30;
@@ -894,7 +911,7 @@ namespace TEST_APP
 
                                 //..............................................................Добавление в таблицу созданной кнопки
                                 table_second.Controls.Add(but[but.Count - 1], 0, 0);
-                                
+
                                 tableLayoutPanel3.Controls.Add(table_second, j, i);
                                 break;
                             }
@@ -1003,7 +1020,7 @@ namespace TEST_APP
         }
 
 
-        private void CheckBox_Handler(object sender ,   EventArgs e)
+        private void CheckBox_Handler(object sender, EventArgs e)
         {
             if (sender != null)
             {
@@ -1012,7 +1029,7 @@ namespace TEST_APP
                 {
                     int index = checkBox.SelectedIndex;
                     checkBox.ItemCheck -= new ItemCheckEventHandler(this.CheckBox_Handler);
-                    for (int i = 0; i < checkBox.Items.Count ; i++)
+                    for (int i = 0; i < checkBox.Items.Count; i++)
                     {
                         if (i != index)
                         {
@@ -1031,7 +1048,7 @@ namespace TEST_APP
         //private void XML_Read()
         //{
         //    // ..................................................................Создание списка кнопок , основанных на раннее объявленном методе
-            
+
 
         //    XmlDocument xml = new XmlDocument();
         //    xml.Load(filePath_XML);
@@ -1254,24 +1271,24 @@ namespace TEST_APP
         // Кнопка отправки уставки тока
         private async void button_take_current_Click(object sender, EventArgs e)
         {
-                if (Press_ETH)
+            if (Press_ETH)
+            {
+                try
                 {
-                    try
-                    {
-                      
+
                     (sender as Button_user).vars = new byte[] { (byte)0xCC, (byte)(Slider_val >> 8), (byte)Slider_val };
                     await Task.Run(() => ETH_send(sender as Button_user));
-                    }
-                    catch
-                    {
-                        SetText_ETH("Ошибка с " + IP_ETH.ToString() + Environment.NewLine);
-                    }
                 }
-                else
+                catch
                 {
-                    SetText_ETH("Нет подключения" +  Environment.NewLine);
-                    SetText_COM("Нет подключения" +  Environment.NewLine);
+                    SetText_ETH("Ошибка с " + IP_ETH.ToString() + Environment.NewLine);
                 }
+            }
+            else
+            {
+                SetText_ETH("Нет подключения" +  Environment.NewLine);
+                SetText_COM("Нет подключения" +  Environment.NewLine);
+            }
             //}
 
         }
@@ -1287,7 +1304,7 @@ namespace TEST_APP
             List<byte> data = new List<byte>();
             if (Press_COM)
             {
-                data.Add((byte)(Slider_val >> 8)); 
+                data.Add((byte)(Slider_val >> 8));
                 data.Add((byte)(Slider_val & 0xFF));
                 byte[] temp = combine_message(data.ToArray());
                 //SetText_COM("Отправлено: " + BitConverter.ToString(temp.ToArray()).Replace("-", " ") + Environment.NewLine);
@@ -1339,7 +1356,7 @@ namespace TEST_APP
 
                                 byte[] new_ar = BitConverter.GetBytes((int)but.uint8[index].Value);
                                 List<byte> new_ar_list = new_ar.ToList();
-                               
+
                                 byte temp_byte = 0;
                                 int ind = new_ar_list.Count - 1;
                                 do
@@ -1369,17 +1386,17 @@ namespace TEST_APP
                                 List<byte> new_ar_list = new_ar.ToList();
 
                                 byte temp_byte = 0;
-                                int ind = new_ar_list.Count - 1;
-                                do
-                                {
-                                    temp_byte = new_ar_list[ind];
+                                //int ind = new_ar_list.Count - 1;
+                                //do
+                                //{
+                                //    temp_byte = new_ar_list[ind];
 
-                                    if (new_ar_list[ind] == 0)
-                                        new_ar_list.RemoveAt(ind);
+                                //    if (new_ar_list[ind] == 0)
+                                //        new_ar_list.RemoveAt(ind);
 
-                                    ind--;
+                                //    ind--;
 
-                                } while ((temp_byte == 0) & (ind > 0));
+                                //} while ((temp_byte == 0) & (ind > 0));
                                 new_ar_list.Reverse();
                                 data.AddRange(new_ar_list);
 
@@ -1387,12 +1404,12 @@ namespace TEST_APP
                                 dict["int"] = ind_int;
                             }
                         }
-                        List <byte> out_word = new List <byte>();
+                        List<byte> out_word = new List<byte>();
                         int index_byte = 0;
                         int index_Count = -1;
-                        int index_CRC = - 1;
-                        
-                        List <byte> CRC = new List <byte>();
+                        int index_CRC = -1;
+
+                        List<byte> CRC = new List<byte>();
                         int count = 0;
                         bool fl_count_crc = false;
                         List<string> NAME = new List<string>();
@@ -1433,16 +1450,22 @@ namespace TEST_APP
                         }
 
                         if (fl_count_crc)
-                            CRC.Add((byte)count);
-
+                        {
+                            CRC.Insert(index_Count, (byte)count);
+                            CRC.Insert(index_Count, 0);
+                        }
                         if (index_CRC != -1)
                             out_word.Insert(index_CRC, crc_out(CRC.ToArray()));
 
                         if (index_Count != -1)
-                            out_word.Insert(index_Count, (byte) count);
+                        {
+                            out_word.Insert(index_Count, (byte)count);
+                            out_word.Insert(index_Count, 0);
+
+                        }
 
                         _serialPort.Write(out_word.ToArray(), 0, out_word.Count);
-                        SetText_COM(but.Text + ": " + BitConverter.ToString(out_word.ToArray()).Replace("-", " ") +  Environment.NewLine);
+                        SetLog("Отправлено: " +  but.Text + ": " + BitConverter.ToString(out_word.ToArray()).Replace("-", " ") +  Environment.NewLine);
                         //SetText_COM("Отправлено: ");
                         //foreach (string str in NAME)
                         //{
@@ -1507,10 +1530,10 @@ namespace TEST_APP
                 float temp1 = (float)(((int)buffer[3] << 8) | ((int)buffer[4])) / 100;
                 float temp2 = (float)(((int)buffer[5] << 8) | ((int)buffer[6])) / 10;
                 time++;
-               // graph.Refresh_chart(temp1,temp2, time);
+                // graph.Refresh_chart(temp1,temp2, time);
                 SetText_ETH(BitConverter.ToString(buffer, 0, 3) + Environment.NewLine);
             }
-            else 
+            else
             {
                 if (buffer[0] == 0xAA)
                 {
@@ -1573,10 +1596,10 @@ namespace TEST_APP
                     }
                 }
 
-            }    
+            }
 
             //SetText_ETH(answer.ToString() + Environment.NewLine);
-            
+
             //answer.Clear();
         }
         private void ETH_send(Button_user button)
@@ -1585,7 +1608,7 @@ namespace TEST_APP
             if (button.var == 0)
                 temp_buf = button.vars;
             else
-                temp_buf =  new byte[] {(byte) button.var };
+                temp_buf =  new byte[] { (byte)button.var };
 
             tcpSocket.Send(temp_buf);
             var buffer = new byte[256];
@@ -1708,7 +1731,7 @@ namespace TEST_APP
             }
         }
         //---------------------------------------------------Циклограмма-------------------------------------
-        delegate void SetCyclCallback(bool flag , CheckBox box);
+        delegate void SetCyclCallback(bool flag, CheckBox box);
         private void SetCycl(bool flag, CheckBox box)
         {
             // Если процесс пытающийся установить текст в элементах формы не тот же из которого они были созданы...
@@ -1716,12 +1739,12 @@ namespace TEST_APP
             {
                 // ...тогда создаем обратный вызов...
                 SetCyclCallback d = new SetCyclCallback(SetCycl);
-                this.Invoke(d, new object[] { flag , box });
+                this.Invoke(d, new object[] { flag, box });
             }
             // ...иначе все по старинке
             else
             {
-                box.Checked = flag;      
+                box.Checked = flag;
             }
         }
         delegate void GET_TIME_delegate();
@@ -1766,7 +1789,7 @@ namespace TEST_APP
 
                 _TIME_STRING_ =  hour_str + min_str + sec_str;
             }
-                
+
 
         }
         void TIME_CLEAN()
@@ -1786,7 +1809,7 @@ namespace TEST_APP
             //if (x.Text == "00:00:00")  
             GET_TIME();
             TIME_CHANGE(x);
-            
+
         }
         delegate void TIMEx_CHANGE_delegate(Label x);
         void TIME_CHANGE(Label x)
@@ -1803,8 +1826,8 @@ namespace TEST_APP
         {
             //.........................................Команда запроса данных
             // graph.Clean_chart();
-            
-           // graph.Refresh_chart(Math.Sin(temp_time)*20,Math.Cos(temp_time)*10, temp_time);
+
+            // graph.Refresh_chart(Math.Sin(temp_time)*20,Math.Cos(temp_time)*10, temp_time);
             //SetText_COM(graph.dataX.Last().ToString() + Environment.NewLine);
             //graph.Refresh_chart();
             /*if (Press_COM)
@@ -1925,8 +1948,8 @@ namespace TEST_APP
                 button_user_Click(but_telemetry, new EventArgs());
             }
 
-            
-                
+
+
             //.........................................Команда запроса данных
             //if (Press_COM)
             //{
@@ -1974,14 +1997,14 @@ namespace TEST_APP
         {
             try
             {
-               // DataLogger logger = new DataLogger();
+                // DataLogger logger = new DataLogger();
                 //logger.Show();
                 graph = new App_v02.Form2();
                 time_global = DateTime.Now;
                 graph.Show();
                 //graph.InitializeComponent();
                 //graph.Init_chart();
-               // graph.Activate();
+                // graph.Activate();
             }
             catch (Exception error)
             {
@@ -2026,290 +2049,981 @@ namespace TEST_APP
             }
         }
         // Обработка полученных данных
-        private void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
+
+        bool flag_start_RS485 = false;
+        int count_RS485_msg = 0;
+
+        //int count_temp = buffer.Count;
+        bool FLAG_END = false;
+        int index_crc = 0;
+        bool flag_ANSWER = false;
+        bool flag_TLM = false;
+        int main_count = 0;
+        int index_inf = 0;
+        bool wrong_flags = false;
+        bool wrong_addr_send = false;
+        bool wrong_addr_reciever = false;
+        List<byte> buffer_RS485 = new List<byte>();
+
+        private async void timer_rs485_tick(object sender, EventArgs e)
         {
-            List<byte> buffer = new List<byte>();
+           //await PARSE_RS485();
+        }
+       private async Task PARSE_RS485()
+        {
+            
             List<byte> crc_calc_answ = new List<byte>();
             List<byte> crc_calc_tlm = new List<byte>();
+            bool flag_wrong = false;
             byte temp_header = 0;
             int len = 0;
-
-            while ((temp_header != STRUCT_ANSWER[0].var) | (temp_header != STRUCT_TELEMETRY[0].var))
-                try
-                {
-                    temp_header = (byte)((sender as SerialPort).ReadByte());
-                    if ((temp_header != STRUCT_ANSWER[0].var) | (temp_header != STRUCT_TELEMETRY[0].var))
-                    {
-                        if (temp_header == 0xD | temp_header == 0xA)
-                        {
-                            SetText_COM(Environment.NewLine);
-                        }
-                        SetText_COM(Encoding.UTF8.GetString(new byte[] { temp_header }, 0, 1));
-
-                    }
-                    
-                }
-                catch 
-                {
-                    //SetText_COM("Не получен заголовочный байт: " + BitConverter.ToString(new byte[] { temp_header }).Replace("-", " ") + Environment.NewLine);
-                }
-
-            if ((temp_header == STRUCT_ANSWER[0].var) | (temp_header == STRUCT_TELEMETRY[0].var))
+            byte[] temp ;
+            int crc = 0;
+            int crc_temp = 0;
+            int index_crc = 0;
+            int index_end = 0;
+            int index_inf = 0;
+            int index_state_word = 0;
+            if (RS485_data.Count > 0)
             {
-                buffer.Add(temp_header);
+                temp = RS485_data.Dequeue();
 
-                bool FLAG_END = false;
-                int i = 1;
-                int index_crc = 0;
-                bool flag_ANSWER = false;
-                bool flag_TLM = false;
-                int main_count = 0;
-                int index_inf = 0;
-                bool wrong_flags = false;
-                bool wrong_addr_send = false;
-                bool wrong_addr_reciever = false;
-
-                do
-                {
-                    int count_temp = buffer.Count;
-
-                    int temp = (byte)((sender as SerialPort).ReadByte());
-
-                    if ((((STRUCT_ANSWER[i].var_string == null) & (STRUCT_ANSWER[i].type != null)) | ((STRUCT_TELEMETRY[i].var_string == null) & (STRUCT_TELEMETRY[i].type != null))) & (STRUCT_TELEMETRY[i].name != "Информация"))
+                if (temp[0] == 0x3F)
+                    if (temp[1] == 0x30)
                     {
-                        if ((temp == STRUCT_ANSWER[i].var) | (temp == STRUCT_TELEMETRY[i].var))
+                        for (int i = 0; i < STRUCT_ANSWER.Count; i++)
                         {
-                            buffer.Add((byte)temp);
-                            //i++;
-                        }
-                        else if ((STRUCT_ANSWER[i].name == "Флаги") | (STRUCT_TELEMETRY[i].name == "Флаги"))
-                        {
-                            wrong_flags = true;
-                            buffer.Add((byte)temp);
-                        }
-                        else if ((STRUCT_ANSWER[i].name == "Адрес получателя") | (STRUCT_TELEMETRY[i].name == "Адрес получателя"))
-                        {
-                            wrong_addr_reciever = true;
-                            buffer.Add((byte)temp);
-                        }
-                        else if ((STRUCT_ANSWER[i].name == "Адрес отправителя") | (STRUCT_TELEMETRY[i].name == "Адрес отправителя"))
-                        {
-                            wrong_addr_send = true;
-                            buffer.Add((byte)temp);
-                        }
-                    }
-
-                    if ((STRUCT_ANSWER[i].var_string != null) | (STRUCT_TELEMETRY[i].var_string != null))
-                    {
-                        index_crc = i + main_count - 1;
-                        buffer.Add((byte)temp);
-                        //i++;
-                    }
-
-                    if (STRUCT_ANSWER[i].crc == true)
-                        crc_calc_answ.Add((byte)temp);
-
-                    if (STRUCT_TELEMETRY[i].crc == true)
-                        crc_calc_tlm.Add((byte)temp);
-
-                    if ((STRUCT_ANSWER[i].name == "Размер информационной части") | (STRUCT_TELEMETRY[i].name == "Размер информационной части"))
-                    {
-                        main_count = temp;
-                        if (temp == STRUCT_ANSWER[i].var)
-                            flag_ANSWER = true;
-                        else if (temp == STRUCT_TELEMETRY[i].var)
-                            flag_TLM = true;
-                        else
-                        {
-                            SetText_COM("Количество пришедших байт не совпадает с настройками " + Environment.NewLine);
-                            break;
-                        }
-                    }
-
-                    if (flag_ANSWER == true)
-                    {
-                        if (STRUCT_ANSWER[i].name == "Информация")
-                        {
-                            index_inf = i;
-                            if (temp != STRUCT_ANSWER[i].var)
+                            if (STRUCT_ANSWER[i].crc == true)
+                                crc_calc_answ.Add(temp[i]);
+                            if (STRUCT_ANSWER[i].name != "Контрольная сумма")
                             {
-                                buffer.Add((byte)temp);
-                                //i++;
-                            }
-                        }
-                        else if (STRUCT_ANSWER[i].name == "Стоп")
-                        {
-                            FLAG_END = true;
-                        }
-                    }
-                    else if (flag_TLM == true)
-                    {
-                        if (STRUCT_TELEMETRY[i].name == "Информация")
-                        {
-                            buffer.Add((byte)temp);
-                            index_inf = i;
-                            for (int j = 0; j < main_count - 1; j++)
-                            {
-                                int temp_inf = 0;
-                                try
-                                {
-                                    temp_inf = (byte)(sender as SerialPort).ReadByte();
-                                    buffer.Add((byte)temp_inf);
-                                    if (STRUCT_TELEMETRY[i].crc == true)
-                                        crc_calc_tlm.Add((byte)temp_inf);
-                                }
-                                catch 
-                                { }
-                            }
-                        }
-                        else if (STRUCT_TELEMETRY[i].name == "Стоп")
-                        {
-                            FLAG_END = true;
-                        }
-                    }
-
-
-                    if (count_temp == buffer.Count)
-                        break;
-
-                    i++;
-                }
-                while (FLAG_END != true);
-
-                int crc = 0;
-
-                if (flag_ANSWER == true)
-                {
-                    if (buffer.ToArray().Last<byte>() != STRUCT_ANSWER.ToArray().Last<USER_struct>().var)
-                        SetText_COM("значение окончания посылки неверное" + Environment.NewLine);
-
-                    else
-                        crc = crc_out(crc_calc_answ.ToArray());
-                }
-                else if (flag_TLM == true)
-                    crc = crc_out(crc_calc_tlm.ToArray());
-
-
-
-                if (crc != buffer[index_crc])
-                    SetText_COM(" CRC не совпал , принятый crc " + (int) buffer[index_crc] + " рассчитанный crc : " + (int) crc + Environment.NewLine);
-                else
-                {
-                    if (flag_ANSWER == true)
-                    {
-
-                        if (wrong_addr_reciever | wrong_addr_send | wrong_flags)
-                        {
-                            if (wrong_flags)
-                                SetText_COM("Получены неверные значение флагов" + Environment.NewLine);
-
-                            if (wrong_addr_send)
-                                SetText_COM("Неверный адрес отправителя" + Environment.NewLine);
-
-                            if (wrong_addr_reciever)
-                                SetText_COM("Неверный адрес получателя" + Environment.NewLine);
-                        }
-                        else
-                        if (buffer.ToArray()[index_inf] != STRUCT_ANSWER[index_inf].var)
-                            SetText_COM(" Пришло неверное значение квитанции : " + BitConverter.ToString(buffer.ToArray()).Replace("-", " ") + Environment.NewLine);
-                        else
-                            SetText_COM("КВИТАНЦИЯ ПРИНЯТА" + Environment.NewLine);
-                    }
-                    else if (flag_TLM == true)
-                    {
-                        int k = 0;
-                        int byte_k = index_inf;
-                        bool flag_double_k = false;
-                        string save_string = "";
-                        double temp_time = 0;
-                        while (k < STRUCT_TELEMETRY[index_inf].user_tlm_data.Count)
-                        {
-                            if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].user_bool_tlm_data.Count != 0)
-                            {
-                                foreach (USER_Bool_tlm_data bool_tlm_data in STRUCT_TELEMETRY[index_inf].user_tlm_data[k].user_bool_tlm_data)
-                                {
-                                    if ((buffer[byte_k] & (1 << bool_tlm_data.index)) == (1 << bool_tlm_data.index))
-                                    {
-                                        if (graph != null)
-                                            graph.flag_refresh(bool_tlm_data.index_flag, true);
-                                    }
-                                    else
-                                        if (graph != null)
-                                            graph.flag_refresh(bool_tlm_data.index_flag, false);
-
-                                }
+                                if ((temp[i] != STRUCT_ANSWER[i].var) && (temp[i] != STRUCT_TELEMETRY[i].var))
+                                    flag_wrong = true;
                             }
                             else
                             {
-                                float temp = 0;
-                                DateTime time = DateTime.Now;
-                                if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].user_uint_tlm_data.Count != 0)
-                                {
-                                   // float temp = 0;
-                                    if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].size == 1)
-                                    {
-                                        temp =(float)(buffer[byte_k]  * STRUCT_TELEMETRY[index_inf].user_tlm_data[k].mult)/STRUCT_TELEMETRY[index_inf].user_tlm_data[k].division;
-                                        save_string = save_string + "\t" + temp.ToString();
-
-                                    }
-                                    else if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].size == 2)
-                                    {
-                                        temp = (float)(((buffer[byte_k] << 8)  + (buffer[byte_k + 1]))  * STRUCT_TELEMETRY[index_inf].user_tlm_data[k].mult) / STRUCT_TELEMETRY[index_inf].user_tlm_data[k].division;
-                                        flag_double_k = true;
-                                        save_string = save_string + "\t" + temp.ToString();
-                                    }
-
-                                    
-
-                                }
-                                else
-
-                                if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].user_temp_tlm_data.Count != 0)
-                                {
-                                    
-                                    if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].size == 1)
-                                    {
-
-                                        temp =(float)((buffer[byte_k] & 0x7F)  * STRUCT_TELEMETRY[index_inf].user_tlm_data[k].mult)/STRUCT_TELEMETRY[index_inf].user_tlm_data[k].division;
-                                        if ((buffer[byte_k] & 0x80) == 0x80)
-                                            temp *= -1;
-                                        save_string = save_string + "\t" + temp.ToString();
-                                    }
-                                    //else if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].size == 2)
-                                    //{
-                                    //    temp = (float)(((buffer[byte_k] << 8)  + (buffer[byte_k + 1]))  * STRUCT_TELEMETRY[index_inf].user_tlm_data[k].mult) / STRUCT_TELEMETRY[index_inf].user_tlm_data[k].division;
-                                    //    flag_double_k = true;
-                                    //}
-
-                                    
-
-                                    
-
-                                }
-                                temp_time = (time - time_global).TotalSeconds;
-                                if (graph != null)
-                                    graph.Refresh_chart(STRUCT_TELEMETRY[index_inf].user_tlm_data[k].index_graph - 1, temp, temp_time);
+                                crc = temp[i];
+                                index_crc = i;
                             }
 
+                            if (STRUCT_ANSWER[i].name == "Информация")
+                                index_inf = i;
 
-                            if (flag_double_k)
+                            if (STRUCT_ANSWER[i].name == "Слово состояния")
+                                index_state_word = i;
+
+                            if (STRUCT_ANSWER[i].name == "Стоп")
+                                if (temp[i] == (STRUCT_ANSWER[i].var))
+                                {
+                                    index_end = i;
+                                    break;
+                                }
+                        }
+                        //List<byte> byte_list = temp.ToList<byte>();
+                        //byte_list.RemoveAt(index_crc);
+                        crc_temp = crc_out(crc_calc_answ.ToArray());
+
+                        if (crc == crc_temp)
+                            if (temp[index_inf] == STRUCT_ANSWER[index_inf].var)
+                                SetText_COM("Получена квитанция об успешном выполнении команды" + Environment.NewLine);
+                            else
                             {
-                                byte_k+=2;
-                                flag_double_k = false;
-                            } 
-                            else 
-                                byte_k++;
+                                if ((temp[index_state_word] & 1) == 1)
+                                    SetText_COM("Ошибка в сообщении" + Environment.NewLine);
+                                if ((temp[index_state_word] & 4) == 4)
+                                    SetText_COM("Абонент занят" + Environment.NewLine);
+                                if ((temp[index_state_word] & 8) == 8)
+                                    SetText_COM("Неисправность абонента" + Environment.NewLine);
+                            }
+                        else
+                            SetText_COM("CRC не совпал пришло: " + crc.ToString() + "Ожидалось: " + crc_temp.ToString() + Environment.NewLine);
 
-                            k++;
-                        }
-                        if (graph != null)
-                        {
-                            save_string = DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute.ToString() + ":" + DateTime.Now.Second.ToString() + ":" + DateTime.Now.Millisecond.ToString() + save_string;
-                            graph.save_info(save_string);
-                        }
                     }
-                }
+                    else
+                    if (temp[1] == 0x28)
+                    {
+                        int count_data_tlm = 0;
+                        for (int i = 0; i < STRUCT_TELEMETRY.Count; i++)
+                        {
+
+
+                            if ((STRUCT_TELEMETRY[i].crc == true) && (STRUCT_TELEMETRY[i].name != "Информация"))
+                                if (count_data_tlm == 0)
+                                    crc_calc_tlm.Add(temp[i + count_data_tlm]);
+                            //else
+                            //    crc_calc_tlm.Add(temp[i + count_data_tlm - 1]);
+
+                            if (STRUCT_TELEMETRY[i].name == "Контрольная сумма")
+                            {
+                                //    if ((temp[i + count_data_tlm] != STRUCT_TELEMETRY[i].var) && (temp[i + count_data_tlm] != STRUCT_TELEMETRY[i].var))
+                                //        flag_wrong = true;
+                                //}
+                                //else
+                                //{
+                                crc = temp[i + count_data_tlm - 1];
+                                index_crc = i + count_data_tlm - 1;
+                            }
+
+                            if (STRUCT_TELEMETRY[i].name == "Информация")
+                            {
+                                index_inf = i;
+                                for (int j = i; j <  count_data_tlm + i; j++)
+                                    crc_calc_tlm.Add(temp[j]);
+                            }
+
+                            if (STRUCT_TELEMETRY[i].name == "Стоп")
+                                if (temp[i + count_data_tlm - 1] == (STRUCT_TELEMETRY[i].var))
+                                {
+                                    index_end = i + count_data_tlm - 1;
+                                    crc_calc_tlm.Add(temp[i + count_data_tlm - 1]);
+                                    break;
+                                }
+
+                            if (STRUCT_TELEMETRY[i].name == "Размер информационной части")
+                                count_data_tlm = temp[count_data_tlm + i];
+                        }
+                        //List<byte> byte_list = temp.ToList<byte>();
+                        //byte_list.RemoveAt(index_crc);
+                        crc_temp = crc_out(crc_calc_tlm.ToArray());
+
+                        if (crc == crc_temp)
+                        {
+                            //if (temp[index_inf] == STRUCT_ANSWER[index_inf].var)
+                            //SetText_COM();
+                            SetLog("Получена телеметрия:  " +  BitConverter.ToString(temp.Take<byte>(STRUCT_TELEMETRY.Count + count_data_tlm - 1).ToArray()).Replace("-", " ") + Environment.NewLine);
+
+                            int k = 0;
+                            int byte_k = index_inf;
+                            bool flag_double_k = false;
+                            string save_string = "";
+                            double temp_time = 0;
+                            while (k < STRUCT_TELEMETRY[index_inf].user_tlm_data.Count)
+                            {
+                                if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].user_bool_tlm_data.Count != 0)
+                                {
+                                    foreach (USER_Bool_tlm_data bool_tlm_data in STRUCT_TELEMETRY[index_inf].user_tlm_data[k].user_bool_tlm_data)
+                                    {
+                                        if ((temp[byte_k] & (1 << bool_tlm_data.index)) == (1 << bool_tlm_data.index))
+                                        {
+                                            if (graph != null)
+                                                await graph.flag_refresh(bool_tlm_data.index_flag, true);
+                                        }
+                                        else
+                                            if (graph != null)
+                                                await graph.flag_refresh(bool_tlm_data.index_flag, false);
+
+                                    }
+                                }
+                                else
+                                {
+                                    float temp_float = 0;
+                                    DateTime time = DateTime.Now;
+                                    if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].user_uint_tlm_data.Count != 0)
+                                    {
+                                        // float temp = 0;
+                                        if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].size == 1)
+                                        {
+                                            temp_float =(float)(temp[byte_k]  * STRUCT_TELEMETRY[index_inf].user_tlm_data[k].mult)/STRUCT_TELEMETRY[index_inf].user_tlm_data[k].division;
+                                            save_string = save_string + "\t" + temp_float.ToString();
+
+                                        }
+                                        else if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].size == 2)
+                                        {
+                                            temp_float = (float)(((temp[byte_k])  + (temp[byte_k + 1] << 8))  * STRUCT_TELEMETRY[index_inf].user_tlm_data[k].mult) / STRUCT_TELEMETRY[index_inf].user_tlm_data[k].division;
+                                            flag_double_k = true;
+                                            save_string = save_string + "\t" + temp_float.ToString();
+                                        }
+
+
+
+                                    }
+                                    else
+
+                                    if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].user_temp_tlm_data.Count != 0)
+                                    {
+
+                                        if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].size == 1)
+                                        {
+
+                                            temp_float =(float)((temp[byte_k] & 0x7F)  * STRUCT_TELEMETRY[index_inf].user_tlm_data[k].mult)/STRUCT_TELEMETRY[index_inf].user_tlm_data[k].division;
+                                            if ((temp[byte_k] & 0x80) == 0x80)
+                                                temp_float *= -1;
+                                            save_string = save_string + "\t" + temp_float.ToString();
+                                        }
+                                        //else if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].size == 2)
+                                        //{
+                                        //    temp = (float)(((buffer[byte_k] << 8)  + (buffer[byte_k + 1]))  * STRUCT_TELEMETRY[index_inf].user_tlm_data[k].mult) / STRUCT_TELEMETRY[index_inf].user_tlm_data[k].division;
+                                        //    flag_double_k = true;
+                                        //}
+
+
+
+
+
+                                    }
+                                    temp_time = (time - time_global).TotalSeconds;
+                                    if (graph != null)
+                                        await graph.Refresh_chart(STRUCT_TELEMETRY[index_inf].user_tlm_data[k].index_graph - 1, temp_float, temp_time);
+                                }
+
+
+                                if (flag_double_k)
+                                {
+                                    byte_k+=2;
+                                    flag_double_k = false;
+                                }
+                                else
+                                    byte_k++;
+
+                                k++;
+                            }
+                            if (graph != null)
+                            {
+                                save_string = DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute.ToString() + ":" + DateTime.Now.Second.ToString() + ":" + DateTime.Now.Millisecond.ToString() + save_string;
+                               await graph.save_info(save_string);
+                            }
+
+                        }
+                        else
+                            SetText_COM("CRC не совпал пришло: " + crc.ToString() + "   Ожидалось: " + crc_temp.ToString() + Environment.NewLine);
+
+
+
+                        //else
+                        //{
+                        //    if ((temp[index_state_word] & 1) == 1)
+                        //        SetText_COM("Ошибка в сообщении" + Environment.NewLine);
+                        //    if ((temp[index_state_word] & 4) == 4)
+                        //        SetText_COM("Абонент занят" + Environment.NewLine);
+                        //    if ((temp[index_state_word] & 8) == 8)
+                        //        SetText_COM("Неисправность абонента" + Environment.NewLine);
+                        //}
+
+                    }
             }
+                        //int k = 0;
+                        //int byte_k = index_inf;
+                        //bool flag_double_k = false;
+                        //string save_string = "";
+                        //double temp_time = 0;
+                        //while (k < STRUCT_TELEMETRY[index_inf].user_tlm_data.Count)
+                        //{
+                        //    if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].user_bool_tlm_data.Count != 0)
+                        //    {
+                        //        foreach (USER_Bool_tlm_data bool_tlm_data in STRUCT_TELEMETRY[index_inf].user_tlm_data[k].user_bool_tlm_data)
+                        //        {
+                        //            if ((buffer[byte_k] & (1 << bool_tlm_data.index)) == (1 << bool_tlm_data.index))
+                        //            {
+                        //                if (graph != null)
+                        //                    graph.flag_refresh(bool_tlm_data.index_flag, true);
+                        //            }
+                        //            else
+                        //                if (graph != null)
+                        //                graph.flag_refresh(bool_tlm_data.index_flag, false);
+
+                        //        }
+                        //    }
+                        //    else
+                        //    {
+                        //        float temp = 0;
+                        //        DateTime time = DateTime.Now;
+                        //        if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].user_uint_tlm_data.Count != 0)
+                        //        {
+                        //            // float temp = 0;
+                        //            if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].size == 1)
+                        //            {
+                        //                temp =(float)(buffer[byte_k]  * STRUCT_TELEMETRY[index_inf].user_tlm_data[k].mult)/STRUCT_TELEMETRY[index_inf].user_tlm_data[k].division;
+                        //                save_string = save_string + "\t" + temp.ToString();
+
+                        //            }
+                        //            else if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].size == 2)
+                        //            {
+                        //                temp = (float)(((buffer[byte_k] << 8)  + (buffer[byte_k + 1]))  * STRUCT_TELEMETRY[index_inf].user_tlm_data[k].mult) / STRUCT_TELEMETRY[index_inf].user_tlm_data[k].division;
+                        //                flag_double_k = true;
+                        //                save_string = save_string + "\t" + temp.ToString();
+                        //            }
+
+
+
+                        //        }
+                        //        else
+
+                        //        if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].user_temp_tlm_data.Count != 0)
+                        //        {
+
+                        //            if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].size == 1)
+                        //            {
+
+                        //                temp =(float)((buffer[byte_k] & 0x7F)  * STRUCT_TELEMETRY[index_inf].user_tlm_data[k].mult)/STRUCT_TELEMETRY[index_inf].user_tlm_data[k].division;
+                        //                if ((buffer[byte_k] & 0x80) == 0x80)
+                        //                    temp *= -1;
+                        //                save_string = save_string + "\t" + temp.ToString();
+                        //            }
+                        //            //else if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].size == 2)
+                        //            //{
+                        //            //    temp = (float)(((buffer[byte_k] << 8)  + (buffer[byte_k + 1]))  * STRUCT_TELEMETRY[index_inf].user_tlm_data[k].mult) / STRUCT_TELEMETRY[index_inf].user_tlm_data[k].division;
+                        //            //    flag_double_k = true;
+                        //            //}
+
+
+
+
+
+                        //        }
+                        //        temp_time = (time - time_global).TotalSeconds;
+                        //        if (graph != null)
+                        //            graph.Refresh_chart(STRUCT_TELEMETRY[index_inf].user_tlm_data[k].index_graph - 1, temp, temp_time);
+                        //    }
+
+
+                        //    if (flag_double_k)
+                        //    {
+                        //        byte_k+=2;
+                        //        flag_double_k = false;
+                        //    }
+                        //    else
+                        //        byte_k++;
+
+                        //    k++;
+                        //}
+                        //if (graph != null)
+                        //{
+                        //    save_string = DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute.ToString() + ":" + DateTime.Now.Second.ToString() + ":" + DateTime.Now.Millisecond.ToString() + save_string;
+                        //    graph.save_info(save_string);
+                        //}
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                //        if (((temp != STRUCT_ANSWER[0].var) || (temp != STRUCT_TELEMETRY[0].var)) && (flag_start_RS485 != true))
+                //    try
+                //    {
+                //        //temp_header = (byte)((sender as SerialPort).ReadByte());     
+                //        if (temp_header == 0xD | temp_header == 0xA)
+                //        {
+                //            SetText_COM(Environment.NewLine);
+                //        }
+                //        SetText_COM(Encoding.UTF8.GetString(new byte[] { temp }, 0, 1));
+                //    }
+                //    catch
+                //    {
+                //        //SetText_COM("Не получен заголовочный байт: " + BitConverter.ToString(new byte[] { temp_header }).Replace("-", " ") + Environment.NewLine);
+                //    }
+                //else
+                //{
+                //    flag_start_RS485 = true;
+
+                //    if ((((STRUCT_ANSWER[count_RS485_msg].var_string == null) & (STRUCT_ANSWER[count_RS485_msg].type != null)) | ((STRUCT_TELEMETRY[count_RS485_msg].var_string == null) & (STRUCT_TELEMETRY[count_RS485_msg].type != null))) & (STRUCT_TELEMETRY[count_RS485_msg].name != "Информация"))
+                //    {
+                //        if ((STRUCT_ANSWER[count_RS485_msg].name == "Заголовок") | (STRUCT_TELEMETRY[count_RS485_msg].name == "Заголовок"))
+                //        {
+                //            buffer_RS485.Add((byte)temp);
+                //        }
+                //        else if ((STRUCT_ANSWER[count_RS485_msg].name == "Флаги") | (STRUCT_TELEMETRY[count_RS485_msg].name == "Флаги"))
+                //        {
+                //            if ((STRUCT_ANSWER[count_RS485_msg].var == temp) | (STRUCT_TELEMETRY[count_RS485_msg].var == temp))
+                //                buffer_RS485.Add((byte)temp);
+                //            else
+                //                wrong_flags = true;
+                //        }
+                //        else if ((STRUCT_ANSWER[count_RS485_msg].name == "Адрес получателя") | (STRUCT_TELEMETRY[count_RS485_msg].name == "Адрес получателя"))
+                //        {
+                //            if ((STRUCT_ANSWER[count_RS485_msg].var == temp) | (STRUCT_TELEMETRY[count_RS485_msg].var == temp))
+                //                buffer_RS485.Add((byte)temp);
+                //            else
+                //                wrong_addr_reciever = true;
+                //        }
+                //        else if ((STRUCT_ANSWER[count_RS485_msg].name == "Адрес отправителя") | (STRUCT_TELEMETRY[count_RS485_msg].name == "Адрес отправителя"))
+                //        {
+                //            if ((STRUCT_ANSWER[count_RS485_msg].var == temp) | (STRUCT_TELEMETRY[count_RS485_msg].var == temp))
+                //                buffer_RS485.Add((byte)temp);
+                //            else
+                //                wrong_addr_send = true;
+                //        }
+                //        if ((STRUCT_ANSWER[count_RS485_msg].name == "reserved") | (STRUCT_TELEMETRY[count_RS485_msg].name == "reserved"))
+                //            buffer_RS485.Add((byte)temp);
+                //    }
+
+                //    if ((STRUCT_ANSWER[count_RS485_msg - main_count].name == "КС") | (STRUCT_TELEMETRY[count_RS485_msg - main_count].name == "КС"))
+                //    {
+                //        index_crc = count_RS485_msg;
+                //        buffer_RS485.Add((byte)temp);
+                //        //i++;
+                //    }
+
+                //    if (STRUCT_ANSWER[count_RS485_msg].crc == true)
+                //        crc_calc_answ.Add((byte)temp);
+
+                //    if (STRUCT_TELEMETRY[count_RS485_msg].crc == true)
+                //        crc_calc_tlm.Add((byte)temp);
+
+                //    if ((STRUCT_ANSWER[count_RS485_msg].name == "Размер информационной части") | (STRUCT_TELEMETRY[count_RS485_msg].name == "Размер информационной части"))
+                //    {
+                //        main_count = temp;
+                //        if (temp == STRUCT_ANSWER[count_RS485_msg].var)
+                //            flag_ANSWER = true;
+                //        else if (temp == STRUCT_TELEMETRY[count_RS485_msg].var)
+                //            flag_TLM = true;
+                //        else
+                //        {
+                //            SetText_COM("Количество пришедших байт не совпадает с настройками " + Environment.NewLine);
+                //            flag_start_RS485 = false;
+                //            flag_ANSWER = false;
+                //            flag_TLM = false;
+                //            wrong_addr_reciever = false;
+                //            wrong_addr_send = false;
+                //            buffer_RS485.Clear();
+                //        }
+                //    }
+
+                //    if (flag_ANSWER == true)
+                //    {
+                //        if (STRUCT_ANSWER[count_RS485_msg].name == "Информация")
+                //            index_inf = count_RS485_msg;
+                //        if ((STRUCT_ANSWER[count_RS485_msg].name != "КС") | (STRUCT_ANSWER[count_RS485_msg].name != "Стоп"))
+                //        {
+                //            buffer_RS485.Add((byte)temp);
+                //        }
+                //        else if (STRUCT_ANSWER[count_RS485_msg].name == "Стоп")
+                //        {
+                //            FLAG_END = true;
+                //        }
+                //    }
+                //    else if (flag_TLM == true)
+                //    {
+                //        if (STRUCT_TELEMETRY[count_RS485_msg].name == "Информация")
+                //            index_inf = count_RS485_msg;
+                //        if ((STRUCT_ANSWER[count_RS485_msg - main_count - 1].name != "КС") | (STRUCT_ANSWER[count_RS485_msg].name != "Стоп"))
+                //        {
+                //            buffer_RS485.Add((byte)temp);
+                //        }
+                //        for (int j = 0; j < main_count - 1; j++)
+                //        {
+                //            int temp_inf = 0;
+                //            try
+                //            {
+                //                //temp_inf = (byte)(sender as SerialPort).ReadByte();
+                //                buffer_RS485.Add((byte)temp_inf);
+                //                if (STRUCT_TELEMETRY[count_RS485_msg].crc == true)
+                //                    crc_calc_tlm.Add((byte)temp_inf);
+                //            }
+                //            catch
+                //            { }
+                //        }
+
+                //        //else if (STRUCT_TELEMETRY[i].name == "Стоп")
+                //        //{
+                //        //    FLAG_END = true;
+                //        //}
+                //    }
+
+
+                //    if (FLAG_END == true)
+                //    {
+                //        flag_start_RS485 = false;
+                //        flag_ANSWER = false;
+                //        flag_TLM = false;
+                //        wrong_addr_reciever = false;
+                //        wrong_addr_send = false;
+                //        buffer_RS485.Clear();
+                //    }
+                //    else
+                //        count_RS485_msg++;
+                //}
+            
+
+
+
+
+
+            //if ((temp_header == STRUCT_ANSWER[0].var) | (temp_header == STRUCT_TELEMETRY[0].var))
+            //{
+            //    buffer.Add(temp_header);
+
+      
+
+            //    do
+            //    {
+                   
+            //    }
+            //    while (FLAG_END != true);
+
+            //    int crc = 0;
+
+            //    if (flag_ANSWER == true)
+            //    {
+            //        if (buffer.ToArray().Last<byte>() != STRUCT_ANSWER.ToArray().Last<USER_struct>().var)
+            //            SetText_COM("значение окончания посылки неверное" + Environment.NewLine);
+
+            //        else
+            //            crc = crc_out(crc_calc_answ.ToArray());
+            //    }
+            //    else if (flag_TLM == true)
+            //        crc = crc_out(crc_calc_tlm.ToArray());
+
+
+
+            //    if (crc != buffer[index_crc])
+            //        SetText_COM(" CRC не совпал , принятый crc " + (int)buffer[index_crc] + " рассчитанный crc : " + (int)crc + Environment.NewLine);
+            //    else
+            //    {
+            //        if (flag_ANSWER == true)
+            //        {
+
+            //            if (wrong_addr_reciever | wrong_addr_send | wrong_flags)
+            //            {
+            //                if (wrong_flags)
+            //                    SetText_COM("Получены неверные значение флагов" + Environment.NewLine);
+
+            //                if (wrong_addr_send)
+            //                    SetText_COM("Неверный адрес отправителя" + Environment.NewLine);
+
+            //                if (wrong_addr_reciever)
+            //                    SetText_COM("Неверный адрес получателя" + Environment.NewLine);
+            //            }
+            //            else
+            //            if (buffer.ToArray()[index_inf] != STRUCT_ANSWER[index_inf].var)
+            //                SetText_COM(" Пришло неверное значение квитанции : " + BitConverter.ToString(buffer.ToArray()).Replace("-", " ") + Environment.NewLine);
+            //            else
+            //                SetText_COM("КВИТАНЦИЯ ПРИНЯТА" + Environment.NewLine);
+            //        }
+            //        else if (flag_TLM == true)
+            //        {
+            //            int k = 0;
+            //            int byte_k = index_inf;
+            //            bool flag_double_k = false;
+            //            string save_string = "";
+            //            double temp_time = 0;
+            //            while (k < STRUCT_TELEMETRY[index_inf].user_tlm_data.Count)
+            //            {
+            //                if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].user_bool_tlm_data.Count != 0)
+            //                {
+            //                    foreach (USER_Bool_tlm_data bool_tlm_data in STRUCT_TELEMETRY[index_inf].user_tlm_data[k].user_bool_tlm_data)
+            //                    {
+            //                        if ((buffer[byte_k] & (1 << bool_tlm_data.index)) == (1 << bool_tlm_data.index))
+            //                        {
+            //                            if (graph != null)
+            //                                graph.flag_refresh(bool_tlm_data.index_flag, true);
+            //                        }
+            //                        else
+            //                            if (graph != null)
+            //                            graph.flag_refresh(bool_tlm_data.index_flag, false);
+
+            //                    }
+            //                }
+            //                else
+            //                {
+            //                    float temp = 0;
+            //                    DateTime time = DateTime.Now;
+            //                    if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].user_uint_tlm_data.Count != 0)
+            //                    {
+            //                        // float temp = 0;
+            //                        if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].size == 1)
+            //                        {
+            //                            temp =(float)(buffer[byte_k]  * STRUCT_TELEMETRY[index_inf].user_tlm_data[k].mult)/STRUCT_TELEMETRY[index_inf].user_tlm_data[k].division;
+            //                            save_string = save_string + "\t" + temp.ToString();
+
+            //                        }
+            //                        else if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].size == 2)
+            //                        {
+            //                            temp = (float)(((buffer[byte_k] << 8)  + (buffer[byte_k + 1]))  * STRUCT_TELEMETRY[index_inf].user_tlm_data[k].mult) / STRUCT_TELEMETRY[index_inf].user_tlm_data[k].division;
+            //                            flag_double_k = true;
+            //                            save_string = save_string + "\t" + temp.ToString();
+            //                        }
+
+
+
+            //                    }
+            //                    else
+
+            //                    if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].user_temp_tlm_data.Count != 0)
+            //                    {
+
+            //                        if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].size == 1)
+            //                        {
+
+            //                            temp =(float)((buffer[byte_k] & 0x7F)  * STRUCT_TELEMETRY[index_inf].user_tlm_data[k].mult)/STRUCT_TELEMETRY[index_inf].user_tlm_data[k].division;
+            //                            if ((buffer[byte_k] & 0x80) == 0x80)
+            //                                temp *= -1;
+            //                            save_string = save_string + "\t" + temp.ToString();
+            //                        }
+            //                        //else if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].size == 2)
+            //                        //{
+            //                        //    temp = (float)(((buffer[byte_k] << 8)  + (buffer[byte_k + 1]))  * STRUCT_TELEMETRY[index_inf].user_tlm_data[k].mult) / STRUCT_TELEMETRY[index_inf].user_tlm_data[k].division;
+            //                        //    flag_double_k = true;
+            //                        //}
+
+
+
+
+
+            //                    }
+            //                    temp_time = (time - time_global).TotalSeconds;
+            //                    if (graph != null)
+            //                        graph.Refresh_chart(STRUCT_TELEMETRY[index_inf].user_tlm_data[k].index_graph - 1, temp, temp_time);
+            //                }
+
+
+            //                if (flag_double_k)
+            //                {
+            //                    byte_k+=2;
+            //                    flag_double_k = false;
+            //                }
+            //                else
+            //                    byte_k++;
+
+            //                k++;
+            //            }
+            //            if (graph != null)
+            //            {
+            //                save_string = DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute.ToString() + ":" + DateTime.Now.Second.ToString() + ":" + DateTime.Now.Millisecond.ToString() + save_string;
+            //                graph.save_info(save_string);
+            //            }
+            //        }
+            //    }
+            //}
+        }
+        //bool fl_rec_rs485 = false;
+        //int count_rec_rs485 = 0;
+        //int count_inf_byte = 0;
+        Queue<byte[]> RS485_data = new Queue<byte[]>(24);
+        private async void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
+        {
+            byte[] buffer = new byte[30];
+            //byte temp_header = 0;
+            int len = 0;
+           
+
+            len = (sender as SerialPort).BytesToRead;
+            
+            (sender as SerialPort).Read(buffer , 0 , len);
+            //SetText_COM(temp + Environment.NewLine);
+            //Convert.ToByte(temp, 16);
+            
+
+            //foreach (char c in temp)
+            //{
+                
+            //    buffer.Add(Convert.ToByte(c));
+            //}
+            RS485_data.Enqueue(buffer.ToArray());
+            await PARSE_RS485();
+            // RS485_data.Enqueue(temp);
+            // SetText_COM("Получено: " + BitConverter.ToString(buffer.ToArray()).Replace("-", " ") + Environment.NewLine);
+            //SetText_COM("Получено: " +BitConverter.ToString(new byte[] {temp}).Replace("-", " ")  + Environment.NewLine);
+
+            //if ((temp == STRUCT_ANSWER[0].var) | (temp == STRUCT_TELEMETRY[0].var) | (fl_rec_rs485 == true))
+            //{
+            //    fl_rec_rs485 = true;
+            //    if ((STRUCT_ANSWER[count_rec_rs485].name == "Размер информационной части") | (STRUCT_TELEMETRY[count_rec_rs485].name == "Размер информационной части"))
+            //        count_inf_byte = temp;
+            //    buffer.Add(temp);
+
+            //    if ((STRUCT_ANSWER[count_rec_rs485].name == "Стоп") | (STRUCT_TELEMETRY[count_rec_rs485].name == "Стоп"))
+            //    {
+            //        count_inf_byte = 0;
+            //        count_rec_rs485 = 0;
+            //        fl_rec_rs485 = false;
+            //    }    
+            //    else
+            //        count_rec_rs485++;
+
+
+            //}
+
+
+
+            //while ((temp_header != STRUCT_ANSWER[0].var) | (temp_header != STRUCT_TELEMETRY[0].var))
+            //    try
+            //    {
+            //        temp_header = (byte)((sender as SerialPort).ReadByte());
+            //        if ((temp_header != STRUCT_ANSWER[0].var) | (temp_header != STRUCT_TELEMETRY[0].var))
+            //        {
+            //            if (temp_header == 0xD | temp_header == 0xA)
+            //            {
+            //                SetText_COM(Environment.NewLine);
+            //            }
+            //            SetText_COM(Encoding.UTF8.GetString(new byte[] { temp_header }, 0, 1));
+
+            //        }
+
+            //    }
+            //    catch 
+            //    {
+            //        //SetText_COM("Не получен заголовочный байт: " + BitConverter.ToString(new byte[] { temp_header }).Replace("-", " ") + Environment.NewLine);
+            //    }
+
+            //if ((temp_header == STRUCT_ANSWER[0].var) | (temp_header == STRUCT_TELEMETRY[0].var))
+            //{
+            //    buffer.Add(temp_header);
+
+
+            //bool FLAG_END = false;
+            //int i = 1;
+            //int index_crc = 0;
+            //bool flag_ANSWER = false;
+            //bool flag_TLM = false;
+            //int main_count = 0;
+            //int index_inf = 0;
+            //bool wrong_flags = false;
+            //bool wrong_addr_send = false;
+            //bool wrong_addr_reciever = false;
+
+            //do
+            //{
+            //    int count_temp = buffer.Count;
+
+            //    int temp = (byte)((sender as SerialPort).ReadByte());
+
+            //    if ((((STRUCT_ANSWER[i].var_string == null) & (STRUCT_ANSWER[i].type != null)) | ((STRUCT_TELEMETRY[i].var_string == null) & (STRUCT_TELEMETRY[i].type != null))) & (STRUCT_TELEMETRY[i].name != "Информация"))
+            //    {
+            //        if ((temp == STRUCT_ANSWER[i].var) | (temp == STRUCT_TELEMETRY[i].var))
+            //        {
+            //            buffer.Add((byte)temp);
+            //            //i++;
+            //        }
+            //        else if ((STRUCT_ANSWER[i].name == "Флаги") | (STRUCT_TELEMETRY[i].name == "Флаги"))
+            //        {
+            //            wrong_flags = true;
+            //            buffer.Add((byte)temp);
+            //        }
+            //        else if ((STRUCT_ANSWER[i].name == "Адрес получателя") | (STRUCT_TELEMETRY[i].name == "Адрес получателя"))
+            //        {
+            //            wrong_addr_reciever = true;
+            //            buffer.Add((byte)temp);
+            //        }
+            //        else if ((STRUCT_ANSWER[i].name == "Адрес отправителя") | (STRUCT_TELEMETRY[i].name == "Адрес отправителя"))
+            //        {
+            //            wrong_addr_send = true;
+            //            buffer.Add((byte)temp);
+            //        }
+            //    }
+
+            //    if ((STRUCT_ANSWER[i].var_string != null) | (STRUCT_TELEMETRY[i].var_string != null))
+            //    {
+            //        index_crc = i + main_count - 1;
+            //        buffer.Add((byte)temp);
+            //        //i++;
+            //    }
+
+            //    if (STRUCT_ANSWER[i].crc == true)
+            //        crc_calc_answ.Add((byte)temp);
+
+            //    if (STRUCT_TELEMETRY[i].crc == true)
+            //        crc_calc_tlm.Add((byte)temp);
+
+            //    if ((STRUCT_ANSWER[i].name == "Размер информационной части") | (STRUCT_TELEMETRY[i].name == "Размер информационной части"))
+            //    {
+            //        main_count = temp;
+            //        if (temp == STRUCT_ANSWER[i].var)
+            //            flag_ANSWER = true;
+            //        else if (temp == STRUCT_TELEMETRY[i].var)
+            //            flag_TLM = true;
+            //        else
+            //        {
+            //            SetText_COM("Количество пришедших байт не совпадает с настройками " + Environment.NewLine);
+            //            break;
+            //        }
+            //    }
+
+            //    if (flag_ANSWER == true)
+            //    {
+            //        if (STRUCT_ANSWER[i].name == "Информация")
+            //        {
+            //            index_inf = i;
+            //            if (temp != STRUCT_ANSWER[i].var)
+            //            {
+            //                buffer.Add((byte)temp);
+            //                //i++;
+            //            }
+            //        }
+            //        else if (STRUCT_ANSWER[i].name == "Стоп")
+            //        {
+            //            FLAG_END = true;
+            //        }
+            //    }
+            //    else if (flag_TLM == true)
+            //    {
+            //        if (STRUCT_TELEMETRY[i].name == "Информация")
+            //        {
+            //            buffer.Add((byte)temp);
+            //            index_inf = i;
+            //            for (int j = 0; j < main_count - 1; j++)
+            //            {
+            //                int temp_inf = 0;
+            //                try
+            //                {
+            //                    temp_inf = (byte)(sender as SerialPort).ReadByte();
+            //                    buffer.Add((byte)temp_inf);
+            //                    if (STRUCT_TELEMETRY[i].crc == true)
+            //                        crc_calc_tlm.Add((byte)temp_inf);
+            //                }
+            //                catch 
+            //                { }
+            //            }
+            //        }
+            //        else if (STRUCT_TELEMETRY[i].name == "Стоп")
+            //        {
+            //            FLAG_END = true;
+            //        }
+            //    }
+
+
+            //    if (count_temp == buffer.Count)
+            //        break;
+
+            //    i++;
+            //}
+            //while (FLAG_END != true);
+
+            //int crc = 0;
+
+            //if (flag_ANSWER == true)
+            //{
+            //    if (buffer.ToArray().Last<byte>() != STRUCT_ANSWER.ToArray().Last<USER_struct>().var)
+            //        SetText_COM("значение окончания посылки неверное" + Environment.NewLine);
+
+            //    else
+            //        crc = crc_out(crc_calc_answ.ToArray());
+            //}
+            //else if (flag_TLM == true)
+            //    crc = crc_out(crc_calc_tlm.ToArray());
+
+
+
+            //if (crc != buffer[index_crc])
+            //    SetText_COM(" CRC не совпал , принятый crc " + (int) buffer[index_crc] + " рассчитанный crc : " + (int) crc + Environment.NewLine);
+            //else
+            //{
+            //    if (flag_ANSWER == true)
+            //    {
+
+            //        if (wrong_addr_reciever | wrong_addr_send | wrong_flags)
+            //        {
+            //            if (wrong_flags)
+            //                SetText_COM("Получены неверные значение флагов" + Environment.NewLine);
+
+            //            if (wrong_addr_send)
+            //                SetText_COM("Неверный адрес отправителя" + Environment.NewLine);
+
+            //            if (wrong_addr_reciever)
+            //                SetText_COM("Неверный адрес получателя" + Environment.NewLine);
+            //        }
+            //        else
+            //        if (buffer.ToArray()[index_inf] != STRUCT_ANSWER[index_inf].var)
+            //            SetText_COM(" Пришло неверное значение квитанции : " + BitConverter.ToString(buffer.ToArray()).Replace("-", " ") + Environment.NewLine);
+            //        else
+            //            SetText_COM("КВИТАНЦИЯ ПРИНЯТА" + Environment.NewLine);
+            //    }
+            //    else if (flag_TLM == true)
+            //    {
+            //        int k = 0;
+            //        int byte_k = index_inf;
+            //        bool flag_double_k = false;
+            //        string save_string = "";
+            //        double temp_time = 0;
+            //        while (k < STRUCT_TELEMETRY[index_inf].user_tlm_data.Count)
+            //        {
+            //            if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].user_bool_tlm_data.Count != 0)
+            //            {
+            //                foreach (USER_Bool_tlm_data bool_tlm_data in STRUCT_TELEMETRY[index_inf].user_tlm_data[k].user_bool_tlm_data)
+            //                {
+            //                    if ((buffer[byte_k] & (1 << bool_tlm_data.index)) == (1 << bool_tlm_data.index))
+            //                    {
+            //                        if (graph != null)
+            //                            graph.flag_refresh(bool_tlm_data.index_flag, true);
+            //                    }
+            //                    else
+            //                        if (graph != null)
+            //                            graph.flag_refresh(bool_tlm_data.index_flag, false);
+
+            //                }
+            //            }
+            //            else
+            //            {
+            //                float temp = 0;
+            //                DateTime time = DateTime.Now;
+            //                if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].user_uint_tlm_data.Count != 0)
+            //                {
+            //                   // float temp = 0;
+            //                    if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].size == 1)
+            //                    {
+            //                        temp =(float)(buffer[byte_k]  * STRUCT_TELEMETRY[index_inf].user_tlm_data[k].mult)/STRUCT_TELEMETRY[index_inf].user_tlm_data[k].division;
+            //                        save_string = save_string + "\t" + temp.ToString();
+
+            //                    }
+            //                    else if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].size == 2)
+            //                    {
+            //                        temp = (float)(((buffer[byte_k] << 8)  + (buffer[byte_k + 1]))  * STRUCT_TELEMETRY[index_inf].user_tlm_data[k].mult) / STRUCT_TELEMETRY[index_inf].user_tlm_data[k].division;
+            //                        flag_double_k = true;
+            //                        save_string = save_string + "\t" + temp.ToString();
+            //                    }
+
+
+
+            //                }
+            //                else
+
+            //                if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].user_temp_tlm_data.Count != 0)
+            //                {
+
+            //                    if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].size == 1)
+            //                    {
+
+            //                        temp =(float)((buffer[byte_k] & 0x7F)  * STRUCT_TELEMETRY[index_inf].user_tlm_data[k].mult)/STRUCT_TELEMETRY[index_inf].user_tlm_data[k].division;
+            //                        if ((buffer[byte_k] & 0x80) == 0x80)
+            //                            temp *= -1;
+            //                        save_string = save_string + "\t" + temp.ToString();
+            //                    }
+            //                    //else if (STRUCT_TELEMETRY[index_inf].user_tlm_data[k].size == 2)
+            //                    //{
+            //                    //    temp = (float)(((buffer[byte_k] << 8)  + (buffer[byte_k + 1]))  * STRUCT_TELEMETRY[index_inf].user_tlm_data[k].mult) / STRUCT_TELEMETRY[index_inf].user_tlm_data[k].division;
+            //                    //    flag_double_k = true;
+            //                    //}
+
+
+
+
+
+            //                }
+            //                temp_time = (time - time_global).TotalSeconds;
+            //                if (graph != null)
+            //                    graph.Refresh_chart(STRUCT_TELEMETRY[index_inf].user_tlm_data[k].index_graph - 1, temp, temp_time);
+            //            }
+
+
+            //            if (flag_double_k)
+            //            {
+            //                byte_k+=2;
+            //                flag_double_k = false;
+            //            } 
+            //            else 
+            //                byte_k++;
+
+            //            k++;
+            //        }
+            //        if (graph != null)
+            //        {
+            //            save_string = DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute.ToString() + ":" + DateTime.Now.Second.ToString() + ":" + DateTime.Now.Millisecond.ToString() + save_string;
+            //            graph.save_info(save_string);
+            //        }
+            //    }
+            //}
+            // }
 
 
 
@@ -2430,9 +3144,48 @@ namespace TEST_APP
         // Подсчет crc
         private byte crc_out(byte[] x)
         {
-            return (byte)(x.Select(t => (int)t).Sum() & 0xFF); ;
+            byte[] CRC_TABLE = new byte[] {
+                                0x00, 0x07, 0x0E, 0x09, 0x1C, 0x1B, 0x12, 0x15,
+                                0x38, 0x3F, 0x36, 0x31, 0x24, 0x23, 0x2A, 0x2D,
+                                0x70, 0x77, 0x7E, 0x79, 0x6C, 0x6B, 0x62, 0x65,
+                                0x48, 0x4F, 0x46, 0x41, 0x54, 0x53, 0x5A, 0x5D,
+                                0xE0, 0xE7, 0xEE, 0xE9, 0xFC, 0xFB, 0xF2, 0xF5,
+                                0xD8, 0xDF, 0xD6, 0xD1, 0xC4, 0xC3, 0xCA, 0xCD,
+                                0x90, 0x97, 0x9E, 0x99, 0x8C, 0x8B, 0x82, 0x85,
+                                0xA8, 0xAF, 0xA6, 0xA1, 0xB4, 0xB3, 0xBA, 0xBD,
+                                0xC7, 0xC0, 0xC9, 0xCE, 0xDB, 0xDC, 0xD5, 0xD2,
+                                0xFF, 0xF8, 0xF1, 0xF6, 0xE3, 0xE4, 0xED, 0xEA,
+                                0xB7, 0xB0, 0xB9, 0xBE, 0xAB, 0xAC, 0xA5, 0xA2,
+                                0x8F, 0x88, 0x81, 0x86, 0x93, 0x94, 0x9D, 0x9A,
+                                0x27, 0x20, 0x29, 0x2E, 0x3B, 0x3C, 0x35, 0x32,
+                                0x1F, 0x18, 0x11, 0x16, 0x03, 0x04, 0x0D, 0x0A,
+                                0x57, 0x50, 0x59, 0x5E, 0x4B, 0x4C, 0x45, 0x42,
+                                0x6F, 0x68, 0x61, 0x66, 0x73, 0x74, 0x7D, 0x7A,
+                                0x89, 0x8E, 0x87, 0x80, 0x95, 0x92, 0x9B, 0x9C,
+                                0xB1, 0xB6, 0xBF, 0xB8, 0xAD, 0xAA, 0xA3, 0xA4,
+                                0xF9, 0xFE, 0xF7, 0xF0, 0xE5, 0xE2, 0xEB, 0xEC,
+                                0xC1, 0xC6, 0xCF, 0xC8, 0xDD, 0xDA, 0xD3, 0xD4,
+                                0x69, 0x6E, 0x67, 0x60, 0x75, 0x72, 0x7B, 0x7C,
+                                0x51, 0x56, 0x5F, 0x58, 0x4D, 0x4A, 0x43, 0x44,
+                                0x19, 0x1E, 0x17, 0x10, 0x05, 0x02, 0x0B, 0x0C,
+                                0x21, 0x26, 0x2F, 0x28, 0x3D, 0x3A, 0x33, 0x34,
+                                0x4E, 0x49, 0x40, 0x47, 0x52, 0x55, 0x5C, 0x5B,
+                                0x76, 0x71, 0x78, 0x7F, 0x6A, 0x6D, 0x64, 0x63,
+                                0x3E, 0x39, 0x30, 0x37, 0x22, 0x25, 0x2C, 0x2B,
+                                0x06, 0x01, 0x08, 0x0F, 0x1A, 0x1D, 0x14, 0x13,
+                                0xAE, 0xA9, 0xA0, 0xA7, 0xB2, 0xB5, 0xBC, 0xBB,
+                                0x96, 0x91, 0x98, 0x9F, 0x8A, 0x8D, 0x84, 0x83,
+                                0xDE, 0xD9, 0xD0, 0xD7, 0xC2, 0xC5, 0xCC, 0xCB,
+                                0xE6, 0xE1, 0xE8, 0xEF, 0xFA, 0xFD, 0xF4, 0xF3};
+            byte temp = 0;
+            foreach (byte word in x)
+            {
+                temp = CRC_TABLE[temp ^ word];
+            }
+            return temp;
+           // return (byte)(x.Select(t => (int)t).Sum() & 0xFF); ;
         }
-        
+        string path_log_file = "";
         // Установить текст в консоль
         delegate void SetTextCallback(string text1);
         public void SetText_COM(string text1)
@@ -2447,9 +3200,67 @@ namespace TEST_APP
             // ...иначе все по старинке
             else
             {
-                this.textBox1.AppendText(text1);
+                string time_string = "";
+
+                if (DateTime.Now.Hour < 10)
+                    time_string += "0" + DateTime.Now.Hour.ToString();
+                else
+                    time_string += DateTime.Now.Hour.ToString();
+
+                time_string += ":";
+
+                if (DateTime.Now.Minute < 10)
+                    time_string += "0" + DateTime.Now.Minute.ToString();
+                else
+                    time_string += DateTime.Now.Minute.ToString();
+
+                time_string += ":";
+
+                if (DateTime.Now.Second < 10)
+                    time_string += "0" + DateTime.Now.Second.ToString();
+                else
+                    time_string += DateTime.Now.Second.ToString();
+
+                this.textBox1.AppendText(time_string + "-  " + text1);
+
+
+                SetLog(text1);
+                
                 //this.textBox1.Text += text1;
             }
+        }
+
+        delegate void SetLogCallback(string text1);
+        public void SetLog(string text1)
+        {
+            // Если процесс пытающийся установить текст в элементах формы не тот же из которого они были созданы...
+            
+            // ...иначе все по старинке     
+                string time_string = "";
+
+                if (DateTime.Now.Hour < 10)
+                    time_string += "0" + DateTime.Now.Hour.ToString();
+                else
+                    time_string += DateTime.Now.Hour.ToString();
+
+                time_string += ":";
+
+                if (DateTime.Now.Minute < 10)
+                    time_string += "0" + DateTime.Now.Minute.ToString();
+                else
+                    time_string += DateTime.Now.Minute.ToString();
+
+                time_string += ":";
+
+                if (DateTime.Now.Second < 10)
+                    time_string += "0" + DateTime.Now.Second.ToString();
+                else
+                    time_string += DateTime.Now.Second.ToString();
+
+                log_file.WriteLineAsync(time_string + "-  " + text1);
+
+                //this.textBox1.Text += text1;
+            
         }
         // Очистка консоли UART
         /*private void button3_Click_1(object sender, EventArgs e)

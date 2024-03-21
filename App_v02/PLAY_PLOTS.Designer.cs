@@ -196,9 +196,9 @@ namespace App_v02
                             string[] time_arr = str_arr_data[0].Split(':');
                             for (int i = time_arr.Length - 1; i >= 0; i--)
                             {
-                                if (i == time_arr.Length - 1)
-                                    time_now += int.Parse(time_arr[i]);
-                                else
+                                //if (i == time_arr.Length - 1)
+                                //    time_now += int.Parse(time_arr[i]);
+                                //else
                                 if (i == time_arr.Length - 2)
                                     time_now += int.Parse(time_arr[i]) * 1000;
                                 else

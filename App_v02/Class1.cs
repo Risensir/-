@@ -777,9 +777,9 @@ this.ResumeLayout(false);
 }*/
 
 
-        delegate void SetChartCallback(int index, double val, double time);
+        delegate Task SetChartCallback(int index, double val, double time);
 
-        public void Refresh_chart(int index, double val, double time)
+        public async Task Refresh_chart(int index, double val, double time)
         //public void Refresh_chart()
         {
             // Если процесс пытающийся установить текст в элементах формы не тот же из которого они были созданы...
@@ -804,9 +804,9 @@ this.ResumeLayout(false);
             }
         }
 
-        delegate void flag_refresh_Callback(int index, bool flag);
+        delegate Task flag_refresh_Callback(int index, bool flag);
 
-        public void flag_refresh(int index, bool flag)
+        public async Task flag_refresh(int index, bool flag)
         {
             if (chBox_arr[index - 1].InvokeRequired)
             {
@@ -871,9 +871,9 @@ this.ResumeLayout(false);
 
         //    
 
-        delegate void saveCallback(string str);
+        delegate Task saveCallback(string str);
 
-        public void save_info(string str)
+        public async Task save_info(string str)
         //public void Refresh_chart()
         {
             // Если процесс пытающийся установить текст в элементах формы не тот же из которого они были созданы...

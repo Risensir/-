@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <main>
 	<answer>
-		<byte 	name = 'Заголовок' var = '3F' count = 'n' crc = 'n' type = 'uint8'/>
+		<byte 	name = 'Заголовок' var = '3F' count = 'n' crc = 'y' type = 'uint8'/>
 
 		<byte	name = 'Флаги' count  = 'n' crc = 'y' type = 'uint8'>
 				<bit name = "Широковещательная команда" index = "0" var = "0"/>
 				<bit name = "Команда" index = "1" var = '0'/>
 				<bit name = "Запрос данных" index = "2" var = '0'/>
 				<bit name = "Передача данных" index = "3" var = '0'/>
-				<bit name = "Передача квитанции" index = "4" var = '1'/>				
+				<bit name = "Передача квитанции" index = "4" var = '1'/>	
+				<bit name = "Обмен 1-го уровня взаимодействия" index = "5" var = '1'/>	
+				<bit name = "Обмен 2-го уровня взаимодействия" index = "6" var = '0'/>		
+				<bit name = "Обмен 3-го уровня взаимодействия" index = "7" var = '0'/>	
 		</byte>
 		
 		<byte 	name = 'Адрес получателя'  
@@ -24,16 +27,29 @@
 			crc = 'y' 
 			type = 'uint8'
 			/>
-
-		<byte 	name = 'Размер информационной части'  
-			var = '01' 
+		<byte 	name = 'reserved'  
+			var = '00' 
 			count = 'n' 
 			crc = 'y' 
 			type = 'uint8'
 			/>
+			
+		<byte 	name = 'Размер информационной части'  
+			var = '02' 
+			count = 'n' 
+			crc = 'y' 
+			type = 'uint16'
+			/>
 
 		<byte 	name = 'Информация'  
 			var = 'AF' 
+			count = 'y' 
+			crc = 'y' 
+			type = 'uint8'
+			/>
+			
+		<byte 	name = 'Слово состояния'  
+			var = '00' 
 			count = 'y' 
 			crc = 'y' 
 			type = 'uint8'
@@ -49,7 +65,7 @@
 		<byte 	name = 'Стоп'  
 			var = '3E' 
 			count = 'n' 
-			crc = 'n' 
+			crc = 'y' 
 			type = 'uint8'
 			/>
 
@@ -57,14 +73,17 @@
 
 	<telemetry>
 
-		<byte 	name = 'Заголовок' var = '3F' count = 'n' crc = 'n' type = 'uint8'/>
+		<byte 	name = 'Заголовок' var = '3F' count = 'n' crc = 'y' type = 'uint8'/>
 
 		<byte	name = 'Флаги' count  = 'n' crc = 'y' type = 'uint8'>
 				<bit name = "Широковещательная команда" index = "0" var = "0"/>
 				<bit name = "Команда" index = "1" var = '0'/>
 				<bit name = "Запрос данных" index = "2" var = '0'/>
 				<bit name = "Передача данных" index = "3" var = '1'/>
-				<bit name = "Передача квитанции" index = "4" var = '0'/>				
+				<bit name = "Передача квитанции" index = "4" var = '0'/>
+				<bit name = "Обмен 1-го уровня взаимодействия" index = "5" var = '1'/>	
+				<bit name = "Обмен 2-го уровня взаимодействия" index = "6" var = '0'/>		
+				<bit name = "Обмен 3-го уровня взаимодействия" index = "7" var = '0'/>	
 		</byte>
 		
 		<byte 	name = 'Адрес получателя'  
@@ -81,6 +100,13 @@
 			type = 'uint8'
 			/>
 
+		<byte 	name = 'reserved'  
+			var = '00' 
+			count = 'n' 
+			crc = 'y' 
+			type = 'uint8'
+			/>
+			
 		<byte 	name = 'Размер информационной части'  
 			var = '0E' 
 			count = 'n' 
@@ -125,14 +151,14 @@
 		<byte 	name = 'Контрольная сумма'  
 			var = 'КС' 
 			count = 'n' 
-			crc = 'n' 
+			crc = 'y' 
 			type = "uint8"
 			/>
 
 		<byte 	name = 'Стоп'  
 			var = '3E' 
 			count = 'n' 
-			crc = 'n' 
+			crc = 'y' 
 			type = 'uint8'
 			/>
 
