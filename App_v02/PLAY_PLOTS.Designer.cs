@@ -200,13 +200,13 @@ namespace App_v02
                                 //    time_now += int.Parse(time_arr[i]);
                                 //else
                                 if (i == time_arr.Length - 2)
-                                    time_now += int.Parse(time_arr[i]) * 1000;
+                                    time_now += int.Parse(time_arr[i]);
                                 else
                                 if (i == time_arr.Length - 3)
-                                    time_now += int.Parse(time_arr[i]) * 1000 * 60;
+                                    time_now += int.Parse(time_arr[i]) * 60;
                                 else
                                 if (i == time_arr.Length - 4)
-                                    time_now += int.Parse(time_arr[i]) * 1000 * 60 * 60;
+                                    time_now += int.Parse(time_arr[i])* 60 * 60;
 
 
                             }

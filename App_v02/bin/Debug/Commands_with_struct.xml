@@ -84,8 +84,27 @@
 <send_const name = 'PV_ON_2' var = '0F'/>
 
 <send_const name = 'TELEMETRY' var = '10'/>	
-											
+			
+<send_const name = 'ON_ANOD' var = '21'/>
+<send_const name = 'ON_KATOD' var = '22'/>
+<send_const name = 'ON_MAGN' var = '23'/>
+<send_const name = 'ON_RR' var = '24'/>
+<send_const name = 'ON_PODZH' var = '25'/>
+<send_const name = 'ON_IMP_300' var = '26'/>
+<send_const name = 'ON_IMP_30' var = '27'/>
+<send_const name = 'OFF_ANOD' var = '28'/>
+<send_const name = 'OFF_KATOD' var = '29'/>
+<send_const name = 'OFF_MAGN' var = '2A'/>
+<send_const name = 'OFF_RR' var = '2B'/>
+<send_const name = 'OFF_PODZH' var = '2C'/>
+<send_const name = 'OFF_IMP_300' var = '2D'/>
+<send_const name = 'OFF_IMP_30' var = '2E'/>
+<send_const name = 'EXTREME_STOP' var = '2F'/>			
 </column2>
+
+<column3>
+
+</column3>
 
 <column5>
 <send_var name = 'Подача тока' var_a = '0' var_b = '4' header = '3F' bytescol = 'y' control_sum = 'y'/>
