@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<mainWindow width = '500' height = '600'>
+
+<column1>
+<send_const name = 'ТЕСТ RS485' var = '19'/>
+<send_const name = 'ТЕСТ МКО' var = '20'/>
+<send_const name = 'ТЕСТ ЭЛЕКТРОКЛАПН.' var = '11'/>
+<send_const name = 'ТЕСТ КОД' var = '20'/>		
+<send_const name = 'ТЕСТ РЕГУЛ. РАСХОДА' var = '12'/>	
+<send_const name = 'ТЕСТ АНОДА' var = '13'/>	
+<send_const name = 'ТЕСТ ПОДЖ.уст. 1' var = '14'/>	
+<send_const name = 'ТЕСТ ПОДЖ.уст. 2' var = '15'/>	
+<send_const name = 'ТЕСТ КАТОД уст. 1' var = '16'/>
+<send_const name = 'ТЕСТ КАТОД уст. 2' var = '17'/>
+<send_const name = 'ТЕСТ МАГН. СИСТ.' var = '18'/>						
+</column1>
+<column2>
+<send_var name = 'Подача тока' var_a = '0' var_b = '4' header = '3F' bytescol = 'y' control_sum = 'y'/></column2>
+</mainWindow>
+

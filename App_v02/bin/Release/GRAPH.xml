@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mainWindow width = '1800' height = '1000'>
+
+<flag name = 'Готовность СПУ' index_flag = '1'/>
+<flag name = 'КУ МГР'  index_flag = '2'/>
+<flag name = 'КУ БПК'  index_flag = '3'/>
+<flag name = 'ЭП'  index_flag = '4'/>
+<flag name = 'АД'  index_flag = '5'/>
+<flag name = 'СПД'  index_flag = '6'/>
+<flag name = 'К'  index_flag = '7'/>
+<flag name = 'СТЗА'  index_flag = '8'/>
+<flag name = 'РРД'  index_flag = '9'/>
+<flag name = 'БПК1'  index_flag = '10'/>
+<flag name = 'БПК2'  index_flag = '11'/>
+<flag name = 'КУ3 БПК'  index_flag = '12'/>
+<flag name = 'КУ6 БПК'  index_flag = '13'/>
+<flag name = 'МК'  index_flag = '14'/>
+				
+<graph name = 'Ток анода'  max_var = '1,5' min_var = "-1" crit_var = "0,5" x_label = "Время" y_label = "Ток анода" index = "1"/>
+<graph name = 'Напряжение анода'  max_var = '360' min_var = "-1" crit_var = "290" x_label = "Время" y_label = "Напряжение анода" index = "2"/>
+<graph name = 'Ток накала катода'  max_var = '13' min_var = "-1" crit_var = "11" x_label = "Время" y_label = "Ток накала катода" index = "3"/>
+<graph name = 'Ток регулятора расхода'  max_var = '6' min_var = "-1"  crit_var = "2,5" x_label = "Время" y_label = "Ток регулятора расхода" index = "4"/>
+<graph name = 'Ток магнитной системы'  max_var = '4' min_var = "-1"  x_label = "Время" y_label = "Ток магн сис" index = "5"/>
+<graph name = 'Ток накала катода'  max_var = '15' min_var = "-1" crit_var = "2,5" x_label = "Время" y_label = "Ток накала катода" index = "6"/>
+<graph name = 'Температура НМ'  max_var = '150' min_var = "-150" crit_var = "0,5" x_label = "Время" y_label = "Температура НМ" index = "7"/>
+<graph name = 'Температура АП'  max_var = '150' min_var = "-150" crit_var = "0,5" x_label = "Время" y_label = "Температура АП" index = "8"/>
+<graph name = 'Температура РР'  max_var = '150' min_var = "-150"  x_label = "Время" y_label = "Температура РР" index = "9"/>
+
+</mainWindow>
+
